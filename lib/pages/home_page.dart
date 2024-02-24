@@ -62,7 +62,7 @@ class _HomePageState extends State<HomePage> {
         children: notes.isEmpty ? [
           Center(
             child: SizedBox(
-              height: 750,
+              height: 650,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
