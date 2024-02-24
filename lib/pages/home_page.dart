@@ -27,7 +27,12 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: searchMode ? const Text(
+          "Search",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ) : const Text(
           "Notes",
           style: TextStyle(
             fontWeight: FontWeight.bold,
@@ -117,7 +122,6 @@ class _HomePageState extends State<HomePage> {
                   || notes[i]["body"].toString().toLowerCase().contains(text)) && text != "") {
                   setState(() {
                     notesFound.add(notes[i]);
-                    print(notesFound);
                   });
                 }
               }
