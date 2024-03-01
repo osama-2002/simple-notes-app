@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:notes/authentication/sign_up.dart';
-import 'package:notes/splash.dart';
 import 'package:notes/theme/colors.dart' as my_colors;
 
 void main() {
