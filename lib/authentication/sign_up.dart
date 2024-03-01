@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:notes/DB/users_db.dart';
 import 'package:notes/authentication/login.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -96,7 +96,11 @@ class _SignUpPageState extends State<SignUpPage> {
                     },
                   );
               } else {
-                registerUser(email: emailController.text.toString(), name: nameController.text.toString(), password: passwordController.text.toString());
+                registerUser(
+                  email: emailController.text.toString(), 
+                  name: nameController.text.toString(), 
+                  password: passwordController.text.toString()
+                );
                 Navigator.of(context).pushAndRemoveUntil( //!
                   MaterialPageRoute(
                     builder: (context) => const LoginPage()
@@ -117,15 +121,53 @@ class _SignUpPageState extends State<SignUpPage> {
                 style: TextStyle(color: Colors.white),
               ),
             ),
-          )
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                "Already have an account? ",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+              ),
+              InkWell(
+                onTap: () {
+                  Navigator.push<void>(
+                    context,
+                    MaterialPageRoute<void>(
+                      builder: (BuildContext context) => const LoginPage(),
+                    ),
+                  );
+                },
+                child: const Text(
+                  "login",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ),
+              )
+            ],
+          ),
         ],
       ),
     );
   }
   void registerUser({email, name, password}) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString("userEmail", emailController.text.toString());
-    await prefs.setString("userName", nameController.text.toString());
-    await prefs.setString("userPassword", passwordController.text.toString());
+    UsersSqlDB myDB = UsersSqlDB();
+    await myDB.initialDB();
+    Map<String, dynamic> userData = {
+      "email":email,
+      "name":name,
+      "password":password,
+      "bio":"tempBio",
+    };
+    await myDB.insertData(userData);
   }
 }

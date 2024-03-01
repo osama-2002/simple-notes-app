@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:notes/DB/users_db.dart';
 import 'package:notes/pages/home_page.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:notes/services/services.dart';
+import 'package:notes/shared.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -21,6 +23,9 @@ class _LoginPageState extends State<LoginPage> {
       ),
       body: ListView(
         children: [
+          const SizedBox(
+            height: 20,
+          ),
           TextField(
             style: const TextStyle(
               color: Colors.white,
@@ -28,11 +33,14 @@ class _LoginPageState extends State<LoginPage> {
             controller: emailController,
             maxLines: 2,
             decoration: const InputDecoration(
-              hintText: "Enter Body",
+              hintText: "Email",
               hintStyle: TextStyle(
                 color: Colors.white,
               ),
             ),
+          ),
+          const SizedBox(
+            height: 20,
           ),
           TextField(
             style: const TextStyle(
@@ -41,11 +49,14 @@ class _LoginPageState extends State<LoginPage> {
             controller: passwordController,
             maxLines: 2,
             decoration: const InputDecoration(
-              hintText: "Enter Body",
+              hintText: "Password",
               hintStyle: TextStyle(
                 color: Colors.white,
               ),
             ),
+          ),
+          const SizedBox(
+            height: 20,
           ),
           InkWell(
             onTap: () {
@@ -69,14 +80,17 @@ class _LoginPageState extends State<LoginPage> {
                     },
                   );
               } else {
-                validateUserInput(email: emailController.text.toString() ,password : passwordController.text.toString())
-                .then((value) {
+                validateUserInput(
+                  email: emailController.text.toString(),
+                  password : passwordController.text.toString()
+                ).then((value) {
                   if(value['isValid']) {
-                    Navigator.push<void>(
-                      context,
-                      MaterialPageRoute<void>(
-                        builder: (BuildContext context) => const HomePage(),
+                    saveUserId(userData['id']);
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                        builder: (context) => const HomePage(),
                       ),
+                      (Route<dynamic> route) => false
                     );
                   } else {
                     showDialog(
@@ -119,15 +133,23 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
   Future<Map> validateUserInput({email, password}) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    List users = [];
+    UsersSqlDB db = UsersSqlDB();
+    db.initialDB();
     Map result = {
       "isValid": false,
     };
-    if(email != prefs.getString("userEmail") ||
-      password != prefs.getString("userPassword")) {
-      return result;
+    await db.readData().
+    then((value) {
+      users = value;
+    });
+    for(int i=0; i<users.length; ++i) {
+      if(users[i]['email'] == email && users[i]['password'] == password) {
+        userData = users[i];
+        result['isValid'] = true;
+        return result;
+      }
     }
-    result['isValid'] = true;
     return result;
   }
 }
