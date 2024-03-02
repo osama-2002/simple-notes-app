@@ -36,24 +36,24 @@ class _SplashScreenState extends State<SplashScreen> {
         await db.initialDB();
         db.readData().then((users) {        
           for(int i=0; i<users.length; ++i) {
-            if(users[i]['id'] == id) {
+            if(id == users[i]['id']) {
               userData = users[i];
               break;
             }
           }
         });
-        Navigator.push<void>(
-          context,
-          MaterialPageRoute<void>(
-            builder: (BuildContext context) => const HomePage(),
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => const HomePage(),
           ),
+          (Route<dynamic> route) => false
         );
       } else {
-        Navigator.push<void>(
-          context,
-          MaterialPageRoute<void>(
-            builder: (BuildContext context) => const SignUpPage(),
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => const SignUpPage(),
           ),
+          (Route<dynamic> route) => false
         );
       }
     });

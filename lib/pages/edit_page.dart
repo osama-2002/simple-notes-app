@@ -70,7 +70,10 @@ class _EditPageState extends State<EditPage> {
                   'userId': userData['id'],
                 };
                 db.insertData(note).then((value) {
-                  Navigator.pop(context, newNote);
+                  db.readData().then((value) {
+                    print(value);
+                    Navigator.pop(context, newNote);
+                  });
                 });
             },
             icon: const Icon(Icons.save),
