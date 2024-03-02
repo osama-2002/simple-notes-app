@@ -77,7 +77,7 @@ class _ProfilePageState extends State<ProfilePage> {
               },
               child: Container(
                 height: 50,
-                width: double.infinity,
+                width: 80,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor,
@@ -88,6 +88,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
