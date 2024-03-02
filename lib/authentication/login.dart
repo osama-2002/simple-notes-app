@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notes/DB/users_db.dart';
+import 'package:notes/authentication/sign_up.dart';
 import 'package:notes/pages/home_page.dart';
 import 'package:notes/services/services.dart';
 import 'package:notes/shared.dart';
@@ -31,7 +32,6 @@ class _LoginPageState extends State<LoginPage> {
               color: Colors.white,
             ),
             controller: emailController,
-            maxLines: 2,
             decoration: const InputDecoration(
               hintText: "Email",
               hintStyle: TextStyle(
@@ -47,13 +47,13 @@ class _LoginPageState extends State<LoginPage> {
               color: Colors.white,
             ),
             controller: passwordController,
-            maxLines: 2,
             decoration: const InputDecoration(
               hintText: "Password",
               hintStyle: TextStyle(
                 color: Colors.white,
               ),
             ),
+            obscureText: true,
           ),
           const SizedBox(
             height: 20,
@@ -127,7 +127,40 @@ class _LoginPageState extends State<LoginPage> {
                 style: TextStyle(color: Colors.white),
               ),
             ),
-          )
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                "Don't have an account? ",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+              ),
+              InkWell(
+                onTap: () {
+                  Navigator.push<void>(
+                    context,
+                    MaterialPageRoute<void>(
+                      builder: (BuildContext context) => const SignUpPage(),
+                    ),
+                  );
+                },
+                child: const Text(
+                  "sign up",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ),
+              )
+            ],
+          ),
         ],
       ),
     );

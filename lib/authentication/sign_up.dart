@@ -30,7 +30,6 @@ class _SignUpPageState extends State<SignUpPage> {
               color: Colors.white,
             ),
             controller: emailController,
-            maxLines: 2,
             decoration: const InputDecoration(
               hintText: "Email",
               hintStyle: TextStyle(
@@ -46,7 +45,6 @@ class _SignUpPageState extends State<SignUpPage> {
               color: Colors.white,
             ),
             controller: nameController,
-            maxLines: 2,
             decoration: const InputDecoration(
               hintText: "Name",
               hintStyle: TextStyle(
@@ -62,13 +60,13 @@ class _SignUpPageState extends State<SignUpPage> {
               color: Colors.white,
             ),
             controller: passwordController,
-            maxLines: 2,
             decoration: const InputDecoration(
               hintText: "Password",
               hintStyle: TextStyle(
                 color: Colors.white,
               ),
             ),
+            obscureText: true,
           ),
           const SizedBox(
             height: 20,
