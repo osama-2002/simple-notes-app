@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notes/DB/users_db.dart';
 import 'package:notes/pages/home_page.dart';
 import 'package:notes/shared.dart';
 
@@ -10,14 +11,14 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  TextEditingController email = TextEditingController();
-  TextEditingController name = TextEditingController();
-  TextEditingController bio = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController bioController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    email.text = userData['email'];
-    name.text = userData['name'];
-    bio.text = userData['bio'];
+    emailController.text = userData['email'];
+    nameController.text = userData['name'];
+    bioController.text = userData['bio'];
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit profile'),
@@ -31,7 +32,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             TextField(
               style: const TextStyle(color: Colors.white),
-              controller: email,
+              controller: emailController,
               decoration: const InputDecoration(
                 hintText: "Edit Email",
                 hintStyle: TextStyle(
@@ -44,7 +45,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             TextField(
               style: const TextStyle(color: Colors.white),
-              controller: name,
+              controller: nameController,
               decoration: const InputDecoration(
                 hintText: "Edit Name",
                 hintStyle: TextStyle(
@@ -55,7 +56,7 @@ class _ProfilePageState extends State<ProfilePage> {
             const SizedBox(height: 16.0),
             TextField(
               style: const TextStyle(color: Colors.white),
-              controller: bio,
+              controller: bioController,
               decoration: const InputDecoration(
                 hintText: "Add Your Bio",
                 hintStyle: TextStyle(
@@ -67,13 +68,24 @@ class _ProfilePageState extends State<ProfilePage> {
               height: 20
             ),
             InkWell(
-              onTap: () {
-                Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(
-                    builder: (context) => const HomePage(),
-                  ),
-                  (Route<dynamic> route) => false
-                );
+              onTap: () async {
+                Map<String, dynamic> updatedUserData = {
+                  'id': userData['id'],
+                  'name': nameController.text,
+                  'email': emailController.text,
+                  'password': userData['password'],
+                  'bio': bioController.text,
+                };
+                UsersSqlDB db = UsersSqlDB();
+                await db.initialDB();
+                await db.updateData(updatedUserData).then((value) {
+                  Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                      builder: (context) => const HomePage(),
+                    ),
+                    (Route<dynamic> route) => false
+                  );
+                });
               },
               child: Container(
                 height: 50,
