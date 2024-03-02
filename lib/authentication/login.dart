@@ -83,8 +83,8 @@ class _LoginPageState extends State<LoginPage> {
                 validateUserInput(
                   email: emailController.text.toString(),
                   password : passwordController.text.toString()
-                ).then((value) {
-                  if(value['isValid']) {
+                ).then((valid) {
+                  if(valid) {
                     saveUserId(userData['id']);
                     Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
@@ -132,13 +132,10 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-  Future<Map> validateUserInput({email, password}) async {
+  Future<bool> validateUserInput({email, password}) async {
     List users = [];
     UsersSqlDB db = UsersSqlDB();
-    db.initialDB();
-    Map result = {
-      "isValid": false,
-    };
+    await db.initialDB();
     await db.readData().
     then((value) {
       users = value;
@@ -146,10 +143,9 @@ class _LoginPageState extends State<LoginPage> {
     for(int i=0; i<users.length; ++i) {
       if(users[i]['email'] == email && users[i]['password'] == password) {
         userData = users[i];
-        result['isValid'] = true;
-        return result;
+        return true;
       }
     }
-    return result;
+    return false;
   }
 }
