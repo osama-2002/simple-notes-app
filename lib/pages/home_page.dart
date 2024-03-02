@@ -3,8 +3,10 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:notes/DB/notes_db.dart';
+import 'package:notes/authentication/login.dart';
 import 'package:notes/pages/edit_page.dart';
 import 'package:notes/pages/profile_page.dart';
+import 'package:notes/services/services.dart';
 import 'package:notes/shared.dart';
 
 class HomePage extends StatefulWidget {
@@ -48,6 +50,36 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => const LoginPage(),
+              ),
+              (Route<dynamic> route) => false
+            );
+            logout();
+          },
+          icon: const Icon(Icons.logout),
+        ),
+        actions: searchMode ? [
+          IconButton(
+            onPressed: (){
+              setState(() {
+                searchMode = false;
+              });
+            },
+            icon: const Icon(Icons.done),
+          )
+        ]:[
+          IconButton(
+            onPressed: (){
+              setState(() {
+                searchMode = true;
+              });
+            },
+            icon: const Icon(Icons.search),
+          ),
+          IconButton(
             onPressed: () {
               Navigator.push<void>(
                 context,
@@ -56,26 +88,8 @@ class _HomePageState extends State<HomePage> {
                 ),
               );
             },
-            icon: const Icon(Icons.person),
+            icon: const Icon(Icons.person, size: 20,),
           ),
-        actions: [
-          !searchMode ? 
-          IconButton(
-            onPressed: (){
-              setState(() {
-                searchMode = true;
-              });
-            },
-            icon: const Icon(Icons.search),
-          )
-          : IconButton(
-            onPressed: (){
-              setState(() {
-                searchMode = false;
-              });
-            },
-            icon: const Icon(Icons.done),
-          )
         ],
       ),
       body: !searchMode ? ListView(
