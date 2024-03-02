@@ -26,25 +26,27 @@ class _ProfilePageState extends State<ProfilePage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            const SizedBox(height: 24.0),
+            const SizedBox(
+              height: 20
+            ),
             TextField(
               style: const TextStyle(color: Colors.white),
               controller: email,
-              maxLines: 2,
               decoration: const InputDecoration(
-                hintText: "You Email",
+                hintText: "Edit Email",
                 hintStyle: TextStyle(
                   color: Colors.white,
                 ),
               ),
             ),
-            const SizedBox(height: 16.0),
+            const SizedBox(
+              height: 20
+            ),
             TextField(
               style: const TextStyle(color: Colors.white),
               controller: name,
-              maxLines: 2,
               decoration: const InputDecoration(
-                hintText: "You Name",
+                hintText: "Edit Name",
                 hintStyle: TextStyle(
                   color: Colors.white,
                 ),
@@ -54,38 +56,40 @@ class _ProfilePageState extends State<ProfilePage> {
             TextField(
               style: const TextStyle(color: Colors.white),
               controller: bio,
-              maxLines: 2,
               decoration: const InputDecoration(
-                hintText: "You Bio",
+                hintText: "Add Your Bio",
                 hintStyle: TextStyle(
                   color: Colors.white,
                 ),
               ),
             ),
-            const SizedBox(height: 24.0),
+            const SizedBox(
+              height: 20
+            ),
             InkWell(
-              onTap: () async {
+              onTap: () {
                 Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                      builder: (context) => const HomePage(),
-                    ),
-                    (Route<dynamic> route) => false);
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(color: Colors.amber.shade300),
-                    child: const Text(
-                      "Save",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 24,
-                      ),
-                    ),
+                  MaterialPageRoute(
+                    builder: (context) => const HomePage(),
                   ),
-                ],
+                  (Route<dynamic> route) => false
+                );
+              },
+              child: Container(
+                height: 50,
+                width: double.infinity,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Text(
+                  'Save',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                  ),
+                ),
               ),
             ),
           ],

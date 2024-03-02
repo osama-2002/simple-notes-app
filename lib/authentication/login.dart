@@ -124,7 +124,10 @@ class _LoginPageState extends State<LoginPage> {
               ),
               child: const Text(
                 'Enter',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
               ),
             ),
           ),

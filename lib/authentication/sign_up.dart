@@ -116,7 +116,10 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
               child: const Text(
                 'Submit',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                ),
               ),
             ),
           ),
@@ -164,7 +167,7 @@ class _SignUpPageState extends State<SignUpPage> {
       "email":email,
       "name":name,
       "password":password,
-      "bio":"tempBio",
+      "bio":"Add Your Bio",
     };
     await myDB.insertData(userData);
   }
