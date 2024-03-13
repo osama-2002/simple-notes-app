@@ -17,14 +17,6 @@ class _EditPageState extends State<EditPage> {
   bool isNote = false;
   TextEditingController titleController = TextEditingController();
   TextEditingController bodyController = TextEditingController();
-  List colors = [
-    Colors.red,
-    Colors.blue,
-    Colors.green,
-    Colors.yellow,
-    Colors.amber,
-    Colors.purple,
-  ];
 
   @override
   void initState() {
@@ -71,7 +63,6 @@ class _EditPageState extends State<EditPage> {
                 };
                 db.insertData(note).then((value) {
                   db.readData().then((value) {
-                    print(value);
                     Navigator.pop(context, newNote);
                   });
                 });
@@ -87,7 +78,7 @@ class _EditPageState extends State<EditPage> {
             child: Center(
               child: Container(
                 decoration: BoxDecoration(
-                  color: colors[Random().nextInt(colors.length)],
+                  color: const Color.fromARGB(255, 22, 82, 150),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 padding: const EdgeInsets.all(20),
@@ -105,7 +96,7 @@ class _EditPageState extends State<EditPage> {
           ),
           Container(
             decoration: BoxDecoration(
-              color: colors[Random().nextInt(colors.length)],
+              color: const Color.fromARGB(255, 22, 82, 150),
               borderRadius: BorderRadius.circular(10),
             ),
             padding: const EdgeInsets.all(20),

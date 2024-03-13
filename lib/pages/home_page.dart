@@ -18,15 +18,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List notes = [], notesFound = [];
-  List colors = [
-    Colors.red,
-    Colors.blue,
-    Colors.green,
-    Colors.yellow,
-    Colors.amber,
-    Colors.purple,
-  ];
   bool searchMode = false;
+  int tabIndex = 0;
   
   @override
   void initState() {
@@ -36,6 +29,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: searchMode ? const Text(
@@ -202,6 +196,36 @@ class _HomePageState extends State<HomePage> {
           color: Colors.white,
         )
       ): Container(),
+      bottomNavigationBar: Container(
+        height: 60,
+        color: const Color.fromARGB(255, 18, 69, 128),
+        child: Row(
+          children: [
+            Expanded(
+              child: IconButton(
+                onPressed: () {
+                  setState(() {
+                    tabIndex = 0;
+                  });
+                },
+                icon: const Icon(Icons.home),
+                color: tabIndex == 0 ? Colors.black : Colors.white,
+              ),
+            ),
+            Expanded(
+              child: IconButton(
+                onPressed: () {
+                  setState(() {
+                    tabIndex = 1;
+                  });
+                },
+                icon: const Icon(Icons.people_sharp),
+                color: tabIndex == 1 ? Colors.black : Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
   Widget note(Map note, int index) {
@@ -252,7 +276,7 @@ class _HomePageState extends State<HomePage> {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: colors[Random().nextInt(colors.length)],
+          color: const Color.fromARGB(255, 22, 82, 150),
           borderRadius: BorderRadius.circular(10),
         ),
         padding: const EdgeInsets.all(20),

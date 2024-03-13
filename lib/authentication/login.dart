@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:notes/DB/users_db.dart';
 import 'package:notes/authentication/sign_up.dart';
 import 'package:notes/pages/home_page.dart';
@@ -28,33 +29,39 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(
               height: 20,
             ),
-            TextField(
-              style: const TextStyle(
-                color: Colors.white,
-              ),
-              controller: emailController,
-              decoration: const InputDecoration(
-                hintText: "Email",
-                hintStyle: TextStyle(
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              child: TextField(
+                style: const TextStyle(
                   color: Colors.white,
+                ),
+                controller: emailController,
+                decoration: const InputDecoration(
+                  hintText: "Email",
+                  hintStyle: TextStyle(
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
             const SizedBox(
               height: 20,
             ),
-            TextField(
-              style: const TextStyle(
-                color: Colors.white,
-              ),
-              controller: passwordController,
-              decoration: const InputDecoration(
-                hintText: "Password",
-                hintStyle: TextStyle(
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              child: TextField(
+                style: const TextStyle(
                   color: Colors.white,
                 ),
+                controller: passwordController,
+                decoration: const InputDecoration(
+                  hintText: "Password",
+                  hintStyle: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                obscureText: true,
               ),
-              obscureText: true,
             ),
             const SizedBox(
               height: 20,

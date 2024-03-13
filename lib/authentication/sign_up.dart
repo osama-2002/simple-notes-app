@@ -26,48 +26,57 @@ class _SignUpPageState extends State<SignUpPage> {
             const SizedBox(
               height: 20,
             ),
-            TextField(
-              style: const TextStyle(
-                color: Colors.white,
-              ),
-              controller: emailController,
-              decoration: const InputDecoration(
-                hintText: "Email",
-                hintStyle: TextStyle(
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              child: TextField(
+                style: const TextStyle(
                   color: Colors.white,
+                ),
+                controller: emailController,
+                decoration: const InputDecoration(
+                  hintText: "Email",
+                  hintStyle: TextStyle(
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
             const SizedBox(
               height: 20,
             ),
-            TextField(
-              style: const TextStyle(
-                color: Colors.white,
-              ),
-              controller: nameController,
-              decoration: const InputDecoration(
-                hintText: "Name",
-                hintStyle: TextStyle(
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              child: TextField(
+                style: const TextStyle(
                   color: Colors.white,
+                ),
+                controller: nameController,
+                decoration: const InputDecoration(
+                  hintText: "Name",
+                  hintStyle: TextStyle(
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
             const SizedBox(
               height: 20,
             ),
-            TextField(
-              style: const TextStyle(
-                color: Colors.white,
-              ),
-              controller: passwordController,
-              decoration: const InputDecoration(
-                hintText: "Password",
-                hintStyle: TextStyle(
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              child: TextField(
+                style: const TextStyle(
                   color: Colors.white,
                 ),
-              ),
-              obscureText: true,
+                controller: passwordController,
+                decoration: const InputDecoration(
+                  hintText: "Password",
+                  hintStyle: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                obscureText: true,
+              ), 
             ),
             const SizedBox(
               height: 20,
