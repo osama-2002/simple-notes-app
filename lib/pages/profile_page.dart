@@ -14,11 +14,14 @@ class _ProfilePageState extends State<ProfilePage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController bioController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    
     emailController.text = userData['email'];
     nameController.text = userData['name'];
     bioController.text = userData['bio'];
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit profile'),
@@ -79,6 +82,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 UsersSqlDB db = UsersSqlDB();
                 await db.initialDB();
                 await db.updateData(updatedUserData).then((value) {
+                  userData = updatedUserData;
                   Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(
                       builder: (context) => const HomePage(),
