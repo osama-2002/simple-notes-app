@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notes/DB/notes_db.dart';
+import 'package:notes/shared.dart';
 
 // ignore: must_be_immutable
 class EditPage extends StatefulWidget {
@@ -54,7 +55,7 @@ class _EditPageState extends State<EditPage> {
                 Map<String, dynamic> note = {
                   'title': titleController.text.toString(),
                   'body': bodyController.text.toString(),
-                  'userId': widget.note['userId'],
+                  'userId': userData['userId'],
                   'id': widget.note['id'],
                 };
                 db.updateData(note).then((value) {
@@ -66,7 +67,7 @@ class _EditPageState extends State<EditPage> {
                 Map<String, dynamic> note = {
                   'title': titleController.text.toString(),
                   'body': bodyController.text.toString(),
-                  'userId': widget.note['userId'],
+                  'userId': userData['userId'],
                   'id': widget.note['id'],
                 };
                 await db.insertData(note).then((value) {
