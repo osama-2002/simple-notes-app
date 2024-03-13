@@ -2,7 +2,12 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:notes/DB/notes_db.dart';
+import 'package:notes/authentication/login.dart';
 import 'package:notes/pages/edit_page.dart';
+import 'package:notes/pages/profile_page.dart';
+import 'package:notes/services/services.dart';
+import 'package:notes/shared.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -24,6 +29,12 @@ class _HomePageState extends State<HomePage> {
   bool searchMode = false;
   
   @override
+  void initState() {
+    getNotes();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -38,17 +49,20 @@ class _HomePageState extends State<HomePage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        actions: [
-          !searchMode ? 
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => const LoginPage(),
+              ),
+              (Route<dynamic> route) => false
+            );
+            logout();
+          },
+          icon: const Icon(Icons.logout),
+        ),
+        actions: searchMode ? [
           IconButton(
-            onPressed: (){
-              setState(() {
-                searchMode = true;
-              });
-            },
-            icon: const Icon(Icons.search),
-          )
-          : IconButton(
             onPressed: (){
               setState(() {
                 searchMode = false;
@@ -56,6 +70,26 @@ class _HomePageState extends State<HomePage> {
             },
             icon: const Icon(Icons.done),
           )
+        ]:[
+          IconButton(
+            onPressed: (){
+              setState(() {
+                searchMode = true;
+              });
+            },
+            icon: const Icon(Icons.search),
+          ),
+          IconButton(
+            onPressed: () {
+              Navigator.push<void>(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (BuildContext context) => const ProfilePage(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.person, size: 20,),
+          ),
         ],
       ),
       body: !searchMode ? ListView(
@@ -152,7 +186,7 @@ class _HomePageState extends State<HomePage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (BuildContext context) => EditPage(note: {}),
+              builder: (BuildContext context) => EditPage(note: const {}),
             ),
           ).then((newNote) {
             if(newNote.toString() != 'null') {
@@ -232,5 +266,18 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+  void getNotes() async {
+    NotesSqlDB db = NotesSqlDB();
+    await db.initialDB();
+    db.readData().then((value) {
+      for(int i=0; i<value.length; ++i) {
+        if(userData['id'] == value[i]['userId']) {
+          setState(() {
+            notes.add(value[i]);
+          });
+        }
+      }
+    });
   }
 }

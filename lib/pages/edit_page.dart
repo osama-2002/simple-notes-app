@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:notes/DB/notes_db.dart';
+import 'package:notes/shared.dart';
 
 // ignore: must_be_immutable
 class EditPage extends StatefulWidget {
@@ -55,14 +57,24 @@ class _EditPageState extends State<EditPage> {
           ),
         ]:[
           IconButton(
-            onPressed: () {
-              setState(() {
+            onPressed: () async {
                 Map newNote = {
                   "title": titleController.text.toString(),
                   "body": bodyController.text.toString(),
                 };
-                Navigator.pop(context, newNote);
-              });
+                NotesSqlDB db = NotesSqlDB();
+                await db.initialDB();
+                Map<String, dynamic> note = {
+                  'title': titleController.text.toString(),
+                  'body': bodyController.text.toString(),
+                  'userId': userData['id'],
+                };
+                db.insertData(note).then((value) {
+                  db.readData().then((value) {
+                    print(value);
+                    Navigator.pop(context, newNote);
+                  });
+                });
             },
             icon: const Icon(Icons.save),
           ),

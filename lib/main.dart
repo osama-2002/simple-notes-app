@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:notes/pages/home_page.dart';
+import 'package:notes/splash.dart';
 import 'package:notes/theme/colors.dart' as my_colors;
 
 void main() {
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: my_colors.backGroundColor,
       ),
       debugShowCheckedModeBanner: false,
-      home: const HomePage(),
+      home: const SplashScreen(),
     );
   }
 }
