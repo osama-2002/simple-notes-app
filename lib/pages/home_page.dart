@@ -257,7 +257,7 @@ class _HomePageState extends State<HomePage> {
               builder: (BuildContext context) => EditPage(note: const {}),
             ),
           ).then((newNote) {
-            if(newNote.toString().isNotEmpty) {
+            if(newNote != null && newNote.toString().isNotEmpty) {
               setState(() {
                 notes.add(newNote);
                 allNotes.add(newNote);
