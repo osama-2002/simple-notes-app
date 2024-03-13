@@ -1,8 +1,5 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:notes/DB/notes_db.dart';
-import 'package:notes/shared.dart';
 
 // ignore: must_be_immutable
 class EditPage extends StatefulWidget {
@@ -14,7 +11,7 @@ class EditPage extends StatefulWidget {
 }
 
 class _EditPageState extends State<EditPage> {
-  bool isNote = false;
+  bool isNote = false, editMode = false;
   TextEditingController titleController = TextEditingController();
   TextEditingController bodyController = TextEditingController();
 
@@ -40,9 +37,10 @@ class _EditPageState extends State<EditPage> {
         ),
         actions: isNote ? [
           IconButton(
-            onPressed: () {
+            onPressed: () async {
               setState(() {
                 isNote = false;
+                editMode = true;
               });
             },
             icon: const Icon(Icons.edit),
@@ -50,22 +48,31 @@ class _EditPageState extends State<EditPage> {
         ]:[
           IconButton(
             onPressed: () async {
-                Map newNote = {
-                  "title": titleController.text.toString(),
-                  "body": bodyController.text.toString(),
-                };
+              if(editMode) {
                 NotesSqlDB db = NotesSqlDB();
                 await db.initialDB();
                 Map<String, dynamic> note = {
                   'title': titleController.text.toString(),
                   'body': bodyController.text.toString(),
-                  'userId': userData['id'],
+                  'userId': widget.note['userId'],
+                  'id': widget.note['id'],
                 };
-                db.insertData(note).then((value) {
-                  db.readData().then((value) {
-                    Navigator.pop(context, newNote);
-                  });
+                db.updateData(note).then((value) {
+                  Navigator.pop(context, note);
                 });
+              } else {
+                NotesSqlDB db = NotesSqlDB();
+                await db.initialDB();
+                Map<String, dynamic> note = {
+                  'title': titleController.text.toString(),
+                  'body': bodyController.text.toString(),
+                  'userId': widget.note['userId'],
+                  'id': widget.note['id'],
+                };
+                await db.insertData(note).then((value) {
+                  Navigator.pop(context, note);
+                });
+              }
             },
             icon: const Icon(Icons.save),
           ),
@@ -116,7 +123,7 @@ class _EditPageState extends State<EditPage> {
             controller: titleController,
             maxLines: 2,
             decoration: const InputDecoration(
-              hintText: "Enter Body",
+              hintText: "Enter Title",
               hintStyle: TextStyle(
                 color: Colors.white,
               ),

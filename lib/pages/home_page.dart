@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:notes/DB/notes_db.dart';
@@ -8,6 +6,7 @@ import 'package:notes/pages/edit_page.dart';
 import 'package:notes/pages/profile_page.dart';
 import 'package:notes/services/services.dart';
 import 'package:notes/shared.dart';
+import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -17,76 +16,89 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List notes = [], notesFound = [];
+  List notes = [], notesFound = [], allNotes = [];
   bool searchMode = false;
   int tabIndex = 0;
   
   @override
   void initState() {
     getNotes();
+    getAllNotes();
     super.initState();
   }
 
-  @override
-  Widget build(BuildContext context) {
-
-    return Scaffold(
-      appBar: AppBar(
-        title: searchMode ? const Text(
-          "Search",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ) : const Text(
-          "Notes",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(
-                builder: (context) => const LoginPage(),
+  Widget loadPublicTab() {
+      return !searchMode ? ListView(
+        children: allNotes.isEmpty ? [
+          const Center(
+            child: Text(
+              "No Public Notes found",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
               ),
-              (Route<dynamic> route) => false
-            );
-            logout();
-          },
-          icon: const Icon(Icons.logout),
-        ),
-        actions: searchMode ? [
-          IconButton(
-            onPressed: (){
-              setState(() {
-                searchMode = false;
-              });
-            },
-            icon: const Icon(Icons.done),
-          )
-        ]:[
-          IconButton(
-            onPressed: (){
-              setState(() {
-                searchMode = true;
-              });
-            },
-            icon: const Icon(Icons.search),
+            )
           ),
-          IconButton(
-            onPressed: () {
-              Navigator.push<void>(
-                context,
-                MaterialPageRoute<void>(
-                  builder: (BuildContext context) => const ProfilePage(),
-                ),
-              );
+        ] : [
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (BuildContext context, int index) {
+              return note(allNotes[index], index);
             },
-            icon: const Icon(Icons.person, size: 20,),
+            itemCount: allNotes.length,
           ),
         ],
-      ),
-      body: !searchMode ? ListView(
+      ) : ListView(
+        children: [
+          TextField(
+            style: const TextStyle(
+              color: Colors.white
+            ),
+            decoration: const InputDecoration(
+              hintText: "Search",
+              hintStyle: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            onChanged: (text) {
+              setState(() {
+                notesFound = [];
+              });
+              for(int i=0; i<allNotes.length; i++) {
+                if((allNotes[i]["title"].toString().toLowerCase().contains(text)
+                  || allNotes[i]["body"].toString().toLowerCase().contains(text)) && text != "") {
+                  setState(() {
+                    notesFound.add(allNotes[i]);
+                  });
+                }
+              }
+            },
+          ),
+          notesFound.isNotEmpty ? ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (BuildContext context, int index) {
+              return note(notesFound[index], index);
+            },
+            itemCount: notesFound.length,
+          ) : const Padding(
+            padding: EdgeInsets.all(10),
+            child: Text(
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 17,
+              ),
+              "No Notes Found",
+            ),
+          )
+        ],
+      );
+  }
+
+  Widget loadPrivateTab() {
+    return !searchMode ? ListView(
         children: notes.isEmpty ? [
           Center(
             child: SizedBox(
@@ -174,8 +186,70 @@ class _HomePageState extends State<HomePage> {
             ),
           )
         ],
+      );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    return Scaffold(
+      appBar: AppBar(
+        title: searchMode ? const Text(
+          "Search",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ) : const Text(
+          "Notes",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                builder: (context) => const LoginPage(),
+              ),
+              (Route<dynamic> route) => false
+            );
+            logout();
+          },
+          icon: const Icon(Icons.logout),
+        ),
+        actions: searchMode ? [
+          IconButton(
+            onPressed: (){
+              setState(() {
+                searchMode = false;
+              });
+            },
+            icon: const Icon(Icons.done),
+          )
+        ]:[
+          IconButton(
+            onPressed: (){
+              setState(() {
+                searchMode = true;
+              });
+            },
+            icon: const Icon(Icons.search),
+          ),
+          IconButton(
+            onPressed: () {
+              Navigator.push<void>(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (BuildContext context) => const ProfilePage(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.person, size: 20,),
+          ),
+        ],
       ),
-      floatingActionButton: !searchMode ? IconButton(
+      body: tabIndex == 0 ? loadPrivateTab() : loadPublicTab(),
+      floatingActionButton: !searchMode && tabIndex == 0 ? IconButton(
         onPressed: (){
           Navigator.push(
             context,
@@ -183,9 +257,10 @@ class _HomePageState extends State<HomePage> {
               builder: (BuildContext context) => EditPage(note: const {}),
             ),
           ).then((newNote) {
-            if(newNote.toString() != 'null') {
+            if(newNote.toString().isNotEmpty) {
               setState(() {
                 notes.add(newNote);
+                allNotes.add(newNote);
               });
             }
           });
@@ -196,37 +271,35 @@ class _HomePageState extends State<HomePage> {
           color: Colors.white,
         )
       ): Container(),
-      bottomNavigationBar: Container(
-        height: 60,
-        color: const Color.fromARGB(255, 18, 69, 128),
-        child: Row(
-          children: [
-            Expanded(
-              child: IconButton(
-                onPressed: () {
-                  setState(() {
-                    tabIndex = 0;
-                  });
-                },
-                icon: const Icon(Icons.home),
-                color: tabIndex == 0 ? Colors.black : Colors.white,
-              ),
+      bottomNavigationBar: SalomonBottomBar(
+          currentIndex: tabIndex,
+          onTap: (i) => setState(() { 
+            tabIndex = i;
+            allNotes = [];
+            getAllNotes();
+          }),
+          items: [
+            SalomonBottomBarItem(
+              icon: const Icon(Icons.home),
+              title: const Text("Home"),
+              selectedColor: Colors.blueAccent,
+              unselectedColor: Colors.white,
             ),
-            Expanded(
-              child: IconButton(
-                onPressed: () {
-                  setState(() {
-                    tabIndex = 1;
-                  });
-                },
-                icon: const Icon(Icons.people_sharp),
-                color: tabIndex == 1 ? Colors.black : Colors.white,
-              ),
+            SalomonBottomBarItem(
+              icon: const Icon(Icons.public),
+              title: const Text("Public"),
+              selectedColor: Colors.pink,
+              unselectedColor: Colors.white,
+            ),
+            SalomonBottomBarItem(
+              icon: const Icon(Icons.account_circle_outlined),
+              title: const Text("Profile"),
+              selectedColor: Colors.teal,
+              unselectedColor: Colors.white,
             ),
           ],
         ),
-      ),
-    );
+      );
   }
   Widget note(Map note, int index) {
     return InkWell(
@@ -245,11 +318,16 @@ class _HomePageState extends State<HomePage> {
                   child: const Text("Cancel"),
                 ),
                 TextButton(
-                  onPressed: () {
+                  onPressed: () async {
                     setState(() {
                       notes.removeAt(index);
+                      allNotes.removeWhere((element) => element['id'] == note['id']);
                     });
-                    Navigator.pop(context);
+                    NotesSqlDB db = NotesSqlDB();
+                    await db.initialDB();
+                    await db.deleteData(note['id']).then((value) {
+                      Navigator.pop(context);
+                    });
                   },
                   child: const Text("Delete"),
                 ),
@@ -265,10 +343,12 @@ class _HomePageState extends State<HomePage> {
               builder: (BuildContext context) => EditPage(note: note),
             ),
           ).then((newNote) {
-            if(newNote.toString() != 'null') {
+            if(newNote != null && newNote.toString().isNotEmpty) {
               setState(() {
                 notes.removeAt(index);
                 notes.insert(index, newNote);
+                allNotes.removeWhere((element) => element['id'] == newNote['id']);
+                allNotes.insert(index, newNote);
               });
             }
           }
@@ -301,6 +381,17 @@ class _HomePageState extends State<HomePage> {
             notes.add(value[i]);
           });
         }
+      }
+    });
+  }
+  void getAllNotes() async {
+    NotesSqlDB db = NotesSqlDB();
+    await db.initialDB();
+    db.readData().then((value) {
+      for(int i=0; i<value.length; ++i) {
+        setState(() {
+          allNotes.add(value[i]);
+        });
       }
     });
   }

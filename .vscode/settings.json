@@ -3,6 +3,7 @@
         "AUTOINCREMENT",
         "mydb",
         "prefs",
+        "Salomon",
         "sqflite"
     ]
 }

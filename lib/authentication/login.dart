@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:notes/DB/users_db.dart';
 import 'package:notes/authentication/sign_up.dart';
 import 'package:notes/pages/home_page.dart';
