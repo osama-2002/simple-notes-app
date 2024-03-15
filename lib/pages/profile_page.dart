@@ -17,10 +17,11 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    
+
     emailController.text = userData['email'];
     nameController.text = userData['name'];
     bioController.text = userData['bio'];
+    final formKey = GlobalKey<FormState>();
 
     return Scaffold(
       appBar: AppBar(
@@ -28,88 +29,125 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 20
-            ),
-            TextField(
-              style: const TextStyle(color: Colors.white),
-              controller: emailController,
-              decoration: const InputDecoration(
-                hintText: "Edit Email",
-                hintStyle: TextStyle(
-                  color: Colors.white,
-                ),
+        child: Form( 
+          key: formKey,
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 20
               ),
-            ),
-            const SizedBox(
-              height: 20
-            ),
-            TextField(
-              style: const TextStyle(color: Colors.white),
-              controller: nameController,
-              decoration: const InputDecoration(
-                hintText: "Edit Name",
-                hintStyle: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            const SizedBox(height: 16.0),
-            TextField(
-              style: const TextStyle(color: Colors.white),
-              controller: bioController,
-              decoration: const InputDecoration(
-                hintText: "Add Your Bio",
-                hintStyle: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 20
-            ),
-            InkWell(
-              onTap: () async {
-                Map<String, dynamic> updatedUserData = {
-                  'id': userData['id'],
-                  'name': nameController.text,
-                  'email': emailController.text,
-                  'password': userData['password'],
-                  'bio': bioController.text,
-                };
-                UsersSqlDB db = UsersSqlDB();
-                await db.initialDB();
-                await db.updateData(updatedUserData).then((value) {
-                  userData = updatedUserData;
-                  Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                      builder: (context) => const HomePage(),
-                    ),
-                    (Route<dynamic> route) => false
-                  );
-                });
-              },
-              child: Container(
-                height: 50,
-                width: 80,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Text(
-                  'Save',
-                  style: TextStyle(
+              TextFormField(
+                validator: (value) {
+                  if(value.toString().contains("@")) {
+                    return null;
+                  } else {
+                    return  "email must contain @.";
+                  }
+                },
+                style: const TextStyle(color: Colors.white),
+                controller: emailController,
+                decoration: const InputDecoration(
+                  hintText: "Edit Email",
+                  hintStyle: TextStyle(
                     color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-            ),
-          ],
+              const SizedBox(
+                height: 20
+              ),
+              TextFormField(
+                validator: (value) {
+                  if(value.toString().length > 3) {
+                    return null;
+                  } else {
+                    return  "name must be more than 3 characters.";
+                  }
+                },
+                style: const TextStyle(color: Colors.white),
+                controller: nameController,
+                decoration: const InputDecoration(
+                  hintText: "Edit Name",
+                  hintStyle: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16.0),
+              TextFormField(
+                validator: (value) {
+                  if(value.toString().length > 3) {
+                    return null;
+                  } else {
+                    return  "bio must be more than 3 characters.";
+                  }
+                },
+                style: const TextStyle(color: Colors.white),
+                controller: bioController,
+                decoration: const InputDecoration(
+                  hintText: "Add Your Bio",
+                  hintStyle: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 20
+              ),
+              InkWell(
+                onTap: () async {
+                  if(formKey.currentState!.validate()) {
+                    Map<String, dynamic> updatedUserData = {
+                      'id': userData['id'],
+                      'name': nameController.text,
+                      'email': emailController.text,
+                      'password': userData['password'],
+                      'bio': bioController.text,
+                    };
+                    UsersSqlDB db = UsersSqlDB();
+                    await db.initialDB();
+                    await db.updateData(updatedUserData).then((value) {
+                      userData = updatedUserData;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Profile updated successfully!'),
+                        ),
+                      );
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                          builder: (context) => const HomePage(),
+                        ),
+                        (Route<dynamic> route) => false
+                      );
+                    });
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Invalid input'),
+                      ),
+                    );
+                  }
+                },
+                child: Container(
+                  height: 50,
+                  width: 80,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Text(
+                    'Save',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

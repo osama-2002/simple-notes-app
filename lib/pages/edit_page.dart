@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:notes/DB/notes_db.dart';
 import 'package:notes/shared.dart';
@@ -7,24 +5,16 @@ import 'package:notes/shared.dart';
 // ignore: must_be_immutable
 class EditPage extends StatefulWidget {
   Map note;
-  EditPage({required this.note, super.key});
+  EditPage(this.note, {super.key});
 
   @override
   State<EditPage> createState() => _EditPageState();
 }
 
 class _EditPageState extends State<EditPage> {
-  bool isNote = false;
+  bool isNote = false, editMode = false;
   TextEditingController titleController = TextEditingController();
   TextEditingController bodyController = TextEditingController();
-  List colors = [
-    Colors.red,
-    Colors.blue,
-    Colors.green,
-    Colors.yellow,
-    Colors.amber,
-    Colors.purple,
-  ];
 
   @override
   void initState() {
@@ -32,7 +22,9 @@ class _EditPageState extends State<EditPage> {
       isNote = true;
       titleController.text = widget.note['title']!;
       bodyController.text = widget.note['body']!;
+      editMode = true;
     }
+    print(widget.note.toString());
     super.initState();
   }
 
@@ -40,17 +32,23 @@ class _EditPageState extends State<EditPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: isNote ? const Text(
           "Edit",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ) : const Text(
+          "Add new Note",
           style: TextStyle(
             fontWeight: FontWeight.bold,
           ),
         ),
         actions: isNote ? [
           IconButton(
-            onPressed: () {
+            onPressed: () async {
               setState(() {
                 isNote = false;
+                editMode = true;
               });
             },
             icon: const Icon(Icons.edit),
@@ -58,23 +56,31 @@ class _EditPageState extends State<EditPage> {
         ]:[
           IconButton(
             onPressed: () async {
-                Map newNote = {
-                  "title": titleController.text.toString(),
-                  "body": bodyController.text.toString(),
-                };
+              if(editMode) {
                 NotesSqlDB db = NotesSqlDB();
                 await db.initialDB();
                 Map<String, dynamic> note = {
                   'title': titleController.text.toString(),
                   'body': bodyController.text.toString(),
                   'userId': userData['id'],
+                  'id': widget.note['id'],
                 };
-                db.insertData(note).then((value) {
-                  db.readData().then((value) {
-                    print(value);
-                    Navigator.pop(context, newNote);
-                  });
+                await db.updateData(note).then((value) {
+                  Navigator.pop(context, note);
                 });
+              } else {
+                NotesSqlDB db = NotesSqlDB();
+                await db.initialDB();
+                Map<String, dynamic> note = {
+                  'title': titleController.text.toString(),
+                  'body': bodyController.text.toString(),
+                  'userId': userData['id'],
+                  'id': availableId++
+                };
+                await db.insertData(note).then((value) {
+                  Navigator.pop(context, note);
+                });
+              }
             },
             icon: const Icon(Icons.save),
           ),
@@ -87,7 +93,7 @@ class _EditPageState extends State<EditPage> {
             child: Center(
               child: Container(
                 decoration: BoxDecoration(
-                  color: colors[Random().nextInt(colors.length)],
+                  color: const Color.fromARGB(255, 22, 82, 150),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 padding: const EdgeInsets.all(20),
@@ -105,7 +111,7 @@ class _EditPageState extends State<EditPage> {
           ),
           Container(
             decoration: BoxDecoration(
-              color: colors[Random().nextInt(colors.length)],
+              color: const Color.fromARGB(255, 22, 82, 150),
               borderRadius: BorderRadius.circular(10),
             ),
             padding: const EdgeInsets.all(20),
@@ -125,7 +131,7 @@ class _EditPageState extends State<EditPage> {
             controller: titleController,
             maxLines: 2,
             decoration: const InputDecoration(
-              hintText: "Enter Body",
+              hintText: "Enter Title",
               hintStyle: TextStyle(
                 color: Colors.white,
               ),
