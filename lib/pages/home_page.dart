@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:notes/DB/notes_db.dart';
 import 'package:notes/authentication/login.dart';
 import 'package:notes/pages/edit_page.dart';
 import 'package:notes/pages/profile_page.dart';
 import 'package:notes/services/services.dart';
 import 'package:notes/shared.dart';
+import 'package:notes/widgets/note_widget.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,177 +16,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List notes = [], notesFound = [], allNotes = [];
+  List notesFound = [];
   bool searchMode = false;
   int tabIndex = 0;
   
   @override
   void initState() {
-    getNotes();
-    getAllNotes();
+    getNotes(setState);
+    getAllNotes(setState);
     super.initState();
-  }
-
-  Widget loadPublicTab() {
-      return !searchMode ? ListView(
-        children: allNotes.isEmpty ? [
-          const Center(
-            child: Text(
-              "No Public Notes found",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-              ),
-            )
-          ),
-        ] : [
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (BuildContext context, int index) {
-              return note(allNotes[index], index);
-            },
-            itemCount: allNotes.length,
-          ),
-        ],
-      ) : ListView(
-        children: [
-          TextField(
-            style: const TextStyle(
-              color: Colors.white
-            ),
-            decoration: const InputDecoration(
-              hintText: "Search",
-              hintStyle: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-            onChanged: (text) {
-              setState(() {
-                notesFound = [];
-              });
-              for(int i=0; i<allNotes.length; i++) {
-                if((allNotes[i]["title"].toString().toLowerCase().contains(text)
-                  || allNotes[i]["body"].toString().toLowerCase().contains(text)) && text != "") {
-                  setState(() {
-                    notesFound.add(allNotes[i]);
-                  });
-                }
-              }
-            },
-          ),
-          notesFound.isNotEmpty ? ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (BuildContext context, int index) {
-              return note(notesFound[index], index);
-            },
-            itemCount: notesFound.length,
-          ) : const Padding(
-            padding: EdgeInsets.all(10),
-            child: Text(
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 17,
-              ),
-              "No Notes Found",
-            ),
-          )
-        ],
-      );
-  }
-
-  Widget loadPrivateTab() {
-    return !searchMode ? ListView(
-        children: notes.isEmpty ? [
-          Center(
-            child: SizedBox(
-              height: 650,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: 
-                    CachedNetworkImage(
-                      imageUrl: "https://media1.tenor.com/m/pb0kIF-blqsAAAAC/minion-typing.gif",
-                      width: 350,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.all(20), 
-                    child: Text(
-                      "Create you first note!",
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ] : [
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (BuildContext context, int index) {
-              return note(notes[index], index);
-            },
-            itemCount: notes.length,
-          ),
-        ],
-      ) : ListView(
-        children: [
-          TextField(
-            style: const TextStyle(
-              color: Colors.white
-            ),
-            decoration: const InputDecoration(
-              hintText: "Search",
-              hintStyle: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-            onChanged: (text) {
-              setState(() {
-                notesFound = [];
-              });
-              for(int i=0; i<notes.length; i++) {
-                if((notes[i]["title"].toString().toLowerCase().contains(text)
-                  || notes[i]["body"].toString().toLowerCase().contains(text)) && text != "") {
-                  setState(() {
-                    notesFound.add(notes[i]);
-                  });
-                }
-              }
-            },
-          ),
-          notesFound.isNotEmpty ? ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (BuildContext context, int index) {
-              return note(notesFound[index], index);
-            },
-            itemCount: notesFound.length,
-          ) : const Padding(
-            padding: EdgeInsets.all(10),
-            child: Text(
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 17,
-              ),
-              "No Notes Found",
-            ),
-          )
-        ],
-      );
   }
 
   @override
@@ -276,7 +114,7 @@ class _HomePageState extends State<HomePage> {
           onTap: (i) => setState(() { 
             tabIndex = i;
             allNotes = [];
-            getAllNotes();
+            getAllNotes(setState);
           }),
           items: [
             SalomonBottomBarItem(
@@ -301,98 +139,166 @@ class _HomePageState extends State<HomePage> {
         ),
       );
   }
-  Widget note(Map note, int index) {
-    return InkWell(
-      onLongPress: () {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text("Delete Note"),
-              content: const Text("Are you sure you want to delete this note?"),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text("Cancel"),
-                ),
-                TextButton(
-                  onPressed: () async {
-                    setState(() {
-                      notes.removeAt(index);
-                      allNotes.removeWhere((element) => element['id'] == note['id']);
-                    });
-                    NotesSqlDB db = NotesSqlDB();
-                    await db.initialDB();
-                    await db.deleteData(note['id']).then((value) {
-                      Navigator.pop(context);
-                    });
-                  },
-                  child: const Text("Delete"),
-                ),
-              ],
-            );
-          },
-        );
-      }
-      ,onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (BuildContext context) => EditPage(note),
-            ),
-          ).then((newNote) {
-            if(newNote != null && newNote.toString().isNotEmpty) {
-              setState(() {
-                notes.removeAt(index);
-                notes.insert(index, newNote);
-                allNotes.removeWhere((element) => element['id'] == newNote['id']);
-                allNotes.insert(index, newNote);
-              });
-            }
-          }
-        );
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 22, 82, 150),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        padding: const EdgeInsets.all(20),
-        margin: const EdgeInsets.all(20),
-        child: Text(
-          note["title"].toString(),
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 30,
+
+  Widget loadPublicTab() {
+      return !searchMode ? ListView(
+        children: allNotes.isEmpty ? [
+          const Center(
+            child: Text(
+              "No Public Notes found",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+              ),
+            )
           ),
-        ),
-      ),
-    );
+        ] : [
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (BuildContext context, int index) {
+              return note(allNotes[index], index, context, setState);
+            },
+            itemCount: allNotes.length,
+          ),
+        ],
+      ) : ListView(
+        children: [
+          TextField(
+            style: const TextStyle(
+              color: Colors.white
+            ),
+            decoration: const InputDecoration(
+              hintText: "Search",
+              hintStyle: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            onChanged: (text) {
+              setState(() {
+                notesFound = [];
+              });
+              for(int i=0; i<allNotes.length; i++) {
+                if((allNotes[i]["title"].toString().toLowerCase().contains(text)
+                  || allNotes[i]["body"].toString().toLowerCase().contains(text)) && text != "") {
+                  setState(() {
+                    notesFound.add(allNotes[i]);
+                  });
+                }
+              }
+            },
+          ),
+          notesFound.isNotEmpty ? ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (BuildContext context, int index) {
+              return note(notesFound[index], index, context, setState);
+            },
+            itemCount: notesFound.length,
+          ) : const Padding(
+            padding: EdgeInsets.all(10),
+            child: Text(
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 17,
+              ),
+              "No Notes Found",
+            ),
+          )
+        ],
+      );
   }
-  void getNotes() async {
-    NotesSqlDB db = NotesSqlDB();
-    await db.initialDB();
-    db.readData().then((value) {
-      for(int i=0; i<value.length; ++i) {
-        if(value[i]['userId'] == userData['id']) {
-          setState(() {
-            notes.add(value[i]);
-          });
-        }
-      }
-    });
-  }
-  void getAllNotes() async {
-    NotesSqlDB db = NotesSqlDB();
-    await db.initialDB();
-    db.readData().then((value) {
-      for(int i=0; i<value.length; ++i) {
-        setState(() {
-          allNotes.add(value[i]);
-        });
-      }
-    });
+
+  Widget loadPrivateTab() {
+    return !searchMode ? ListView(
+        children: notes.isEmpty ? [
+          Center(
+            child: SizedBox(
+              height: 650,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: 
+                    CachedNetworkImage(
+                      imageUrl: "https://media1.tenor.com/m/pb0kIF-blqsAAAAC/minion-typing.gif",
+                      width: 350,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.all(20), 
+                    child: Text(
+                      "Create you first note!",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ] : [
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (BuildContext context, int index) {
+              return note(notes[index], index, context, setState);
+            },
+            itemCount: notes.length,
+          ),
+        ],
+      ) : ListView(
+        children: [
+          TextField(
+            style: const TextStyle(
+              color: Colors.white
+            ),
+            decoration: const InputDecoration(
+              hintText: "Search",
+              hintStyle: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            onChanged: (text) {
+              setState(() {
+                notesFound = [];
+              });
+              for(int i=0; i<notes.length; i++) {
+                if((notes[i]["title"].toString().toLowerCase().contains(text)
+                  || notes[i]["body"].toString().toLowerCase().contains(text)) && text != "") {
+                  setState(() {
+                    notesFound.add(notes[i]);
+                  });
+                }
+              }
+            },
+          ),
+          notesFound.isNotEmpty ? ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (BuildContext context, int index) {
+              return note(notesFound[index], index, context, setState);
+            },
+            itemCount: notesFound.length,
+          ) : const Padding(
+            padding: EdgeInsets.all(10),
+            child: Text(
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 17,
+              ),
+              "No Notes Found",
+            ),
+          )
+        ],
+      );
   }
 }

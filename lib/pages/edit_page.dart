@@ -75,6 +75,7 @@ class _EditPageState extends State<EditPage> {
                   'title': titleController.text.toString(),
                   'body': bodyController.text.toString(),
                   'userId': userData['id'],
+                  'id': availableId++
                 };
                 await db.insertData(note).then((value) {
                   Navigator.pop(context, note);
