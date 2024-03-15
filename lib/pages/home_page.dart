@@ -248,13 +248,13 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: tabIndex == 0 ? loadPrivateTab() : loadPublicTab(),
+      body: tabIndex == 0 ? loadPrivateTab() : tabIndex == 1 ? loadPublicTab() : const Placeholder(),
       floatingActionButton: !searchMode && tabIndex == 0 ? IconButton(
         onPressed: (){
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (BuildContext context) => EditPage(note: const {}),
+              builder: (BuildContext context) => EditPage(const {}),
             ),
           ).then((newNote) {
             if(newNote != null && newNote.toString().isNotEmpty) {
@@ -340,7 +340,7 @@ class _HomePageState extends State<HomePage> {
         Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (BuildContext context) => EditPage(note: note),
+              builder: (BuildContext context) => EditPage(note),
             ),
           ).then((newNote) {
             if(newNote != null && newNote.toString().isNotEmpty) {
@@ -376,7 +376,7 @@ class _HomePageState extends State<HomePage> {
     await db.initialDB();
     db.readData().then((value) {
       for(int i=0; i<value.length; ++i) {
-        if(userData['id'] == value[i]['userId']) {
+        if(value[i]['userId'] == userData['id']) {
           setState(() {
             notes.add(value[i]);
           });

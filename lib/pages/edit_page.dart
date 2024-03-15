@@ -5,7 +5,7 @@ import 'package:notes/shared.dart';
 // ignore: must_be_immutable
 class EditPage extends StatefulWidget {
   Map note;
-  EditPage({required this.note, super.key});
+  EditPage(this.note, {super.key});
 
   @override
   State<EditPage> createState() => _EditPageState();
@@ -22,7 +22,9 @@ class _EditPageState extends State<EditPage> {
       isNote = true;
       titleController.text = widget.note['title']!;
       bodyController.text = widget.note['body']!;
+      editMode = true;
     }
+    print(widget.note.toString());
     super.initState();
   }
 
@@ -30,8 +32,13 @@ class _EditPageState extends State<EditPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: isNote ? const Text(
           "Edit",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ) : const Text(
+          "Add new Note",
           style: TextStyle(
             fontWeight: FontWeight.bold,
           ),
@@ -55,10 +62,10 @@ class _EditPageState extends State<EditPage> {
                 Map<String, dynamic> note = {
                   'title': titleController.text.toString(),
                   'body': bodyController.text.toString(),
-                  'userId': userData['userId'],
+                  'userId': userData['id'],
                   'id': widget.note['id'],
                 };
-                db.updateData(note).then((value) {
+                await db.updateData(note).then((value) {
                   Navigator.pop(context, note);
                 });
               } else {
@@ -67,8 +74,7 @@ class _EditPageState extends State<EditPage> {
                 Map<String, dynamic> note = {
                   'title': titleController.text.toString(),
                   'body': bodyController.text.toString(),
-                  'userId': userData['userId'],
-                  'id': widget.note['id'],
+                  'userId': userData['id'],
                 };
                 await db.insertData(note).then((value) {
                   Navigator.pop(context, note);
