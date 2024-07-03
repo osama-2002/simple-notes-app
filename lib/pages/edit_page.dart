@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
+import 'package:notes/models/note.dart';
 import 'package:notes/DB/notes_db.dart';
 import 'package:notes/shared.dart';
 
@@ -8,7 +9,7 @@ var uuid = const Uuid();
 
 class EditPage extends StatefulWidget {
   const EditPage(this.note, {super.key});
-  final Map note;
+  final Note? note;
 
   @override
   State<EditPage> createState() => _EditPageState();
@@ -22,10 +23,10 @@ class _EditPageState extends State<EditPage> {
   @override
   void initState() {
     super.initState();
-    if (widget.note.isNotEmpty) {
+    if (widget.note != null) {
       isNote = true;
-      titleController.text = widget.note['title']!;
-      bodyController.text = widget.note['body']!;
+      titleController.text = widget.note!.title;
+      bodyController.text = widget.note!.body;
       editMode = true;
     }
   }
@@ -66,10 +67,10 @@ class _EditPageState extends State<EditPage> {
                       NotesSqlDB db = NotesSqlDB();
                       await db.initialDB();
                       Map<String, dynamic> note = {
-                        'id': widget.note['id'],
+                        'id': widget.note!.id,
                         'title': titleController.text.toString(),
                         'body': bodyController.text.toString(),
-                        'userId': usersController.userData['id'],
+                        'userId': usersController.currentUser.id,
                       };
                       await db.updateData(note).then((value) {
                         Navigator.pop(context, note);
@@ -80,7 +81,7 @@ class _EditPageState extends State<EditPage> {
                       Map<String, dynamic> note = {
                         'title': titleController.text.toString(),
                         'body': bodyController.text.toString(),
-                        'userId': usersController.userData['id'],
+                        'userId': usersController.currentUser.id,
                         'id': uuid.v4()
                       };
                       await db.insertData(note).then((value) {
@@ -106,7 +107,7 @@ class _EditPageState extends State<EditPage> {
                       padding: const EdgeInsets.all(20),
                       margin: const EdgeInsets.all(20),
                       child: Text(
-                        widget.note["title"].toString(),
+                        widget.note!.title.toString(),
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           fontSize: 20,
@@ -124,7 +125,7 @@ class _EditPageState extends State<EditPage> {
                   padding: const EdgeInsets.all(20),
                   margin: const EdgeInsets.all(20),
                   child: Text(
-                    widget.note["body"].toString(),
+                    widget.note!.body.toString(),
                     style: const TextStyle(
                       fontSize: 20,
                     ),

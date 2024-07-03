@@ -17,9 +17,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    emailController.text = usersController.userData['email'] ?? '';
-    nameController.text = usersController.userData['name'] ?? '';
-    bioController.text = usersController.userData['bio'] ?? '';
+    emailController.text = usersController.currentUser.email;
+    nameController.text = usersController.currentUser.name;
+    bioController.text = usersController.currentUser.bio;
     final formKey = GlobalKey<FormState>();
 
     return Scaffold(
@@ -91,10 +91,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 onTap: () async {
                   if (formKey.currentState!.validate()) {
                     Map<String, dynamic> updatedUserData = {
-                      'id': usersController.userData['id'],
+                      'id': usersController.currentUser.id,
                       'name': nameController.text,
                       'email': emailController.text,
-                      'password': usersController.userData['password'],
+                      'password': usersController.currentUser.id,
                       'bio': bioController.text,
                     };
                     usersController.updateUserData(updatedUserData);

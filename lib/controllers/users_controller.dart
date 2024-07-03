@@ -3,8 +3,8 @@ import 'package:notes/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UsersController {
-  Map<String, dynamic> userData = {};
-  List users = [];
+  User currentUser = User(id: '', email: '', name: '', password: '', bio: '');
+  List<User> users = [];
 
   UsersController() {
     getUsers();
@@ -13,43 +13,45 @@ class UsersController {
   void getUsers() async {
     UsersSqlDB db = UsersSqlDB();
     await db.initialDB();
-    users = await db.readData();
+    List<Map<String, dynamic>> usersFromDb = await db.readData();
+    users = usersFromDb
+        .map(
+          (userMap) => User.fromMap(userMap),
+        )
+        .toList();
   }
 
   void updateUserData(Map<String, dynamic> updatedUserData) async {
     UsersSqlDB db = UsersSqlDB();
     await db.initialDB();
     await db.updateData(updatedUserData);
-    userData = updatedUserData;
+    currentUser = User.fromMap(updatedUserData);
+    getUsers();
   }
 
   void registerUser(User user) async {
     UsersSqlDB db = UsersSqlDB();
     await db.initialDB();
-    await db.insertData(userData);
-    userData = {
+    await db.insertData({
       "id": user.id,
       "email": user.email,
       "name": user.name,
       "password": user.password,
       "bio": user.bio,
-    };
+    });
+    currentUser = user;
     saveUserId(user.id);
+    getUsers();
   }
 
   Future<bool> loadUserData() async {
     String id = await getUserId();
     if (id != '') {
       for (int i = 0; i < users.length; ++i) {
-        if (id == users[i]['id']) {
-          userData = {
-            "id": users[i]['id'],
-            "email": users[i]['email'],
-            "name": users[i]['name'],
-            "password": users[i]['password'],
-            "bio": users[i]['bio'],
-          };
-          saveUserId(users[i]['id']);
+        if (id == users[i].id) {
+          currentUser = users[i];
+          saveUserId(users[i].id);
+          getUsers();
           return true;
         }
       }
@@ -59,16 +61,11 @@ class UsersController {
 
   Future<bool> validateLogin({email, password}) async {
     for (int i = 0; i < users.length; ++i) {
-      if (users[i]['email'] == email && users[i]['password'] == password) {
-        userData = {
-          "id": users[i]['id'],
-          "email": users[i]['email'],
-          "name": users[i]['name'],
-          "password": users[i]['password'],
-          "bio": users[i]['bio'],
-        };
-        saveUserId(users[i]['id']);
-        return true;
+      if (users[i].email == email && users[i].password == password) {
+        currentUser = users[i];
+          saveUserId(users[i].id);
+          getUsers();
+          return true;
       }
     }
     return false;
@@ -88,6 +85,6 @@ class UsersController {
   void logout() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString("currentUserId", '');
-    userData = {};
+    currentUser = User(id: '', email: '', name: '', password: '', bio: '');
   }
 }

@@ -95,7 +95,7 @@ class _HomePageState extends State<HomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (BuildContext context) => EditPage(const {}),
+                    builder: (BuildContext context) => const EditPage(null),
                   ),
                 ).then((newNote) {
                   if (newNote != null && newNote.toString().isNotEmpty) {
@@ -116,7 +116,6 @@ class _HomePageState extends State<HomePage> {
         currentIndex: tabIndex,
         onTap: (i) => setState(() {
           tabIndex = i;
-          //notesController.allUsersNotes = [];
         }),
         items: [
           SalomonBottomBarItem(
@@ -161,7 +160,9 @@ class _HomePageState extends State<HomePage> {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (BuildContext context, int index) {
-                        return note(notesController.allUsersNotes[index], index, context, setState);
+                        return NoteWidget(
+                            note: notesController.allUsersNotes[index],
+                            index: index);
                       },
                       itemCount: notesController.allUsersNotes.length,
                     ),
@@ -181,12 +182,14 @@ class _HomePageState extends State<HomePage> {
                   setState(() {
                     notesFound = [];
                   });
-                  for (int i = 0; i < notesController.allUsersNotes.length; i++) {
-                    if ((notesController.allUsersNotes[i]["title"]
+                  for (int i = 0;
+                      i < notesController.allUsersNotes.length;
+                      i++) {
+                    if ((notesController.allUsersNotes[i].title
                                 .toString()
                                 .toLowerCase()
                                 .contains(text) ||
-                            notesController.allUsersNotes[i]["body"]
+                            notesController.allUsersNotes[i].body
                                 .toString()
                                 .toLowerCase()
                                 .contains(text)) &&
@@ -203,8 +206,8 @@ class _HomePageState extends State<HomePage> {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (BuildContext context, int index) {
-                        return note(
-                            notesFound[index], index, context, setState);
+                        return NoteWidget(
+                            note: notesFound[index], index: index);
                       },
                       itemCount: notesFound.length,
                     )
@@ -265,7 +268,9 @@ class _HomePageState extends State<HomePage> {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (BuildContext context, int index) {
-                        return note(notesController.currentUserNotes[index], index, context, setState);
+                        return NoteWidget(
+                            note: notesController.currentUserNotes[index],
+                            index: index);
                       },
                       itemCount: notesController.currentUserNotes.length,
                     ),
@@ -285,12 +290,14 @@ class _HomePageState extends State<HomePage> {
                   setState(() {
                     notesFound = [];
                   });
-                  for (int i = 0; i < notesController.currentUserNotes.length; i++) {
-                    if ((notesController.currentUserNotes[i]["title"]
+                  for (int i = 0;
+                      i < notesController.currentUserNotes.length;
+                      i++) {
+                    if ((notesController.currentUserNotes[i].title
                                 .toString()
                                 .toLowerCase()
                                 .contains(text) ||
-                            notesController.currentUserNotes[i]["body"]
+                            notesController.currentUserNotes[i].body
                                 .toString()
                                 .toLowerCase()
                                 .contains(text)) &&
@@ -307,8 +314,8 @@ class _HomePageState extends State<HomePage> {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemBuilder: (BuildContext context, int index) {
-                        return note(
-                            notesFound[index], index, context, setState);
+                        return NoteWidget(
+                            note: notesFound[index], index: index);
                       },
                       itemCount: notesFound.length,
                     )

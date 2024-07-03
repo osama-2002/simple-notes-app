@@ -14,4 +14,13 @@ class Note {
     required this.body,
     required this.userId,
   }) : id = id ?? uuid.v4();
+
+  factory Note.fromMap(Map<String, dynamic> map) {
+    return Note(
+      id: map['id'],
+      title: map['title'],
+      body: map['body'],
+      userId: map['userId'],
+    );
+  }
 }
