@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:notes/DB/users_db.dart';
+
 import 'package:notes/pages/home_page.dart';
 import 'package:notes/shared.dart';
 
@@ -17,10 +17,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-
-    emailController.text = userData['email'];
-    nameController.text = userData['name'];
-    bioController.text = userData['bio'];
+    emailController.text = usersController.userData['email'] ?? '';
+    nameController.text = usersController.userData['name'] ?? '';
+    bioController.text = usersController.userData['bio'] ?? '';
     final formKey = GlobalKey<FormState>();
 
     return Scaffold(
@@ -29,19 +28,17 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
-        child: Form( 
+        child: Form(
           key: formKey,
           child: Column(
             children: [
-              const SizedBox(
-                height: 20
-              ),
+              const SizedBox(height: 20),
               TextFormField(
                 validator: (value) {
-                  if(value.toString().contains("@")) {
+                  if (value.toString().contains("@")) {
                     return null;
                   } else {
-                    return  "email must contain @.";
+                    return "email must contain @.";
                   }
                 },
                 style: const TextStyle(color: Colors.white),
@@ -53,15 +50,13 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 20
-              ),
+              const SizedBox(height: 20),
               TextFormField(
                 validator: (value) {
-                  if(value.toString().length > 3) {
+                  if (value.toString().length > 3) {
                     return null;
                   } else {
-                    return  "name must be more than 3 characters.";
+                    return "name must be more than 3 characters.";
                   }
                 },
                 style: const TextStyle(color: Colors.white),
@@ -76,10 +71,10 @@ class _ProfilePageState extends State<ProfilePage> {
               const SizedBox(height: 16.0),
               TextFormField(
                 validator: (value) {
-                  if(value.toString().length > 3) {
+                  if (value.toString().length > 3) {
                     return null;
                   } else {
-                    return  "bio must be more than 3 characters.";
+                    return "bio must be more than 3 characters.";
                   }
                 },
                 style: const TextStyle(color: Colors.white),
@@ -91,35 +86,28 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 20
-              ),
+              const SizedBox(height: 20),
               InkWell(
                 onTap: () async {
-                  if(formKey.currentState!.validate()) {
+                  if (formKey.currentState!.validate()) {
                     Map<String, dynamic> updatedUserData = {
-                      'id': userData['id'],
+                      'id': usersController.userData['id'],
                       'name': nameController.text,
                       'email': emailController.text,
-                      'password': userData['password'],
+                      'password': usersController.userData['password'],
                       'bio': bioController.text,
                     };
-                    UsersSqlDB db = UsersSqlDB();
-                    await db.initialDB();
-                    await db.updateData(updatedUserData).then((value) {
-                      userData = updatedUserData;
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Profile updated successfully!'),
-                        ),
-                      );
-                      Navigator.of(context).pushAndRemoveUntil(
+                    usersController.updateUserData(updatedUserData);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Profile updated successfully!'),
+                      ),
+                    );
+                    Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
                           builder: (context) => const HomePage(),
                         ),
-                        (Route<dynamic> route) => false
-                      );
-                    });
+                        (Route<dynamic> route) => false);
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(

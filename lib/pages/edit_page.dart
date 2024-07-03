@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
+
 import 'package:notes/DB/notes_db.dart';
 import 'package:notes/shared.dart';
 
-// ignore: must_be_immutable
+var uuid = const Uuid();
+
 class EditPage extends StatefulWidget {
-  Map note;
-  EditPage(this.note, {super.key});
+  const EditPage(this.note, {super.key});
+  final Map note;
 
   @override
   State<EditPage> createState() => _EditPageState();
@@ -18,139 +21,144 @@ class _EditPageState extends State<EditPage> {
 
   @override
   void initState() {
-    if(widget.note.isNotEmpty) {
+    super.initState();
+    if (widget.note.isNotEmpty) {
       isNote = true;
       titleController.text = widget.note['title']!;
       bodyController.text = widget.note['body']!;
       editMode = true;
     }
-    print(widget.note.toString());
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: isNote ? const Text(
-          "Edit",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ) : const Text(
-          "Add new Note",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        actions: isNote ? [
-          IconButton(
-            onPressed: () async {
-              setState(() {
-                isNote = false;
-                editMode = true;
-              });
-            },
-            icon: const Icon(Icons.edit),
-          ),
-        ]:[
-          IconButton(
-            onPressed: () async {
-              if(editMode) {
-                NotesSqlDB db = NotesSqlDB();
-                await db.initialDB();
-                Map<String, dynamic> note = {
-                  'title': titleController.text.toString(),
-                  'body': bodyController.text.toString(),
-                  'userId': userData['id'],
-                  'id': widget.note['id'],
-                };
-                await db.updateData(note).then((value) {
-                  Navigator.pop(context, note);
-                });
-              } else {
-                NotesSqlDB db = NotesSqlDB();
-                await db.initialDB();
-                Map<String, dynamic> note = {
-                  'title': titleController.text.toString(),
-                  'body': bodyController.text.toString(),
-                  'userId': userData['id'],
-                  'id': availableId++
-                };
-                await db.insertData(note).then((value) {
-                  Navigator.pop(context, note);
-                });
-              }
-            },
-            icon: const Icon(Icons.save),
-          ),
-        ],
+        title: isNote
+            ? const Text(
+                "Edit",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              )
+            : const Text(
+                "Add new Note",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+        actions: isNote
+            ? [
+                IconButton(
+                  onPressed: () async {
+                    setState(() {
+                      isNote = false;
+                      editMode = true;
+                    });
+                  },
+                  icon: const Icon(Icons.edit),
+                ),
+              ]
+            : [
+                IconButton(
+                  onPressed: () async {
+                    if (editMode) {
+                      NotesSqlDB db = NotesSqlDB();
+                      await db.initialDB();
+                      Map<String, dynamic> note = {
+                        'id': widget.note['id'],
+                        'title': titleController.text.toString(),
+                        'body': bodyController.text.toString(),
+                        'userId': usersController.userData['id'],
+                      };
+                      await db.updateData(note).then((value) {
+                        Navigator.pop(context, note);
+                      });
+                    } else {
+                      NotesSqlDB db = NotesSqlDB();
+                      await db.initialDB();
+                      Map<String, dynamic> note = {
+                        'title': titleController.text.toString(),
+                        'body': bodyController.text.toString(),
+                        'userId': usersController.userData['id'],
+                        'id': uuid.v4()
+                      };
+                      await db.insertData(note).then((value) {
+                        Navigator.pop(context, note);
+                      });
+                    }
+                  },
+                  icon: const Icon(Icons.save),
+                ),
+              ],
       ),
       body: ListView(
-        children: isNote ? [
-          SizedBox(
-            width: 100,
-            child: Center(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 22, 82, 150),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                padding: const EdgeInsets.all(20),
-                margin: const EdgeInsets.all(20),
-                child: Text(
-                  widget.note["title"].toString(),
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+        children: isNote
+            ? [
+                SizedBox(
+                  width: 100,
+                  child: Center(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 22, 82, 150),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      padding: const EdgeInsets.all(20),
+                      margin: const EdgeInsets.all(20),
+                      child: Text(
+                        widget.note["title"].toString(),
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 22, 82, 150),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            padding: const EdgeInsets.all(20),
-            margin: const EdgeInsets.all(20),
-            child: Text(
-              widget.note["body"].toString(),
-              style: const TextStyle(
-                fontSize: 20,
-              ),
-            ),
-          ),
-        ] : [
-          TextField(
-            style: const TextStyle(
-              color: Colors.white,
-            ),
-            controller: titleController,
-            maxLines: 2,
-            decoration: const InputDecoration(
-              hintText: "Enter Title",
-              hintStyle: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-          ),
-          TextField(
-            style: const TextStyle(
-              color: Colors.white,
-            ),
-            controller: bodyController,
-            maxLines: 5,
-            decoration: const InputDecoration(
-              hintText: "Enter Body",
-              hintStyle: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ],
+                Container(
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 22, 82, 150),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: const EdgeInsets.all(20),
+                  margin: const EdgeInsets.all(20),
+                  child: Text(
+                    widget.note["body"].toString(),
+                    style: const TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+              ]
+            : [
+                TextField(
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
+                  controller: titleController,
+                  maxLines: 2,
+                  decoration: const InputDecoration(
+                    hintText: "Enter Title",
+                    hintStyle: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                TextField(
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
+                  controller: bodyController,
+                  maxLines: 5,
+                  decoration: const InputDecoration(
+                    hintText: "Enter Body",
+                    hintStyle: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
       ),
     );
   }
