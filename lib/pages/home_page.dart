@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:notes/models/note.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 import 'package:notes/authentication/login.dart';
@@ -16,7 +17,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List notesFound = [];
+  List<Note> notesFound = [];
   bool searchMode = false;
   int tabIndex = 0;
 
@@ -100,8 +101,7 @@ class _HomePageState extends State<HomePage> {
                 ).then((newNote) {
                   if (newNote != null && newNote.toString().isNotEmpty) {
                     setState(() {
-                      notesController.currentUserNotes.add(newNote);
-                      notesController.allUsersNotes.add(newNote);
+                      notesController.addNote(newNote);
                     });
                   }
                 });
@@ -110,7 +110,8 @@ class _HomePageState extends State<HomePage> {
                 Icons.add,
                 size: 30,
                 color: Colors.white,
-              ))
+              ),
+            )
           : Container(),
       bottomNavigationBar: SalomonBottomBar(
         currentIndex: tabIndex,

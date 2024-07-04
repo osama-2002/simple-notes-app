@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:notes/DB/notes_db.dart';
 import 'package:notes/models/note.dart';
 import 'package:notes/pages/edit_page.dart';
 import 'package:notes/shared.dart';
@@ -34,17 +33,11 @@ class _NoteWidgetState extends State<NoteWidget> {
                   child: const Text("Cancel"),
                 ),
                 TextButton(
-                  onPressed: () async {
+                  onPressed: () {
                     setState(() {
-                      notesController.currentUserNotes.removeAt(widget.index);
-                      notesController.allUsersNotes.removeWhere(
-                          (element) => element.id == widget.note.id);
+                      notesController.deleteNote(widget.note);
                     });
-                    NotesSqlDB db = NotesSqlDB();
-                    await db.initialDB();
-                    await db.deleteData(widget.note.id).then((value) {
-                      Navigator.pop(context);
-                    });
+                    Navigator.pop(context);
                   },
                   child: const Text("Delete"),
                 ),
@@ -59,17 +52,7 @@ class _NoteWidgetState extends State<NoteWidget> {
           MaterialPageRoute(
             builder: (BuildContext context) => EditPage(widget.note),
           ),
-        ).then((newNote) {
-          if (newNote != null && newNote.toString().isNotEmpty) {
-            setState(() {
-              notesController.currentUserNotes.removeAt(widget.index);
-              notesController.currentUserNotes.insert(widget.index, newNote);
-              notesController.allUsersNotes
-                  .removeWhere((element) => element.id == newNote['id']);
-              notesController.allUsersNotes.insert(widget.index, newNote);
-            });
-          }
-        });
+        );
       },
       child: Container(
         decoration: BoxDecoration(

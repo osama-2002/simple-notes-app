@@ -4,9 +4,11 @@ import 'package:notes/shared.dart';
 
 class NotesController {
   List<Note> currentUserNotes = [], allUsersNotes = [];
+
   NotesController() {
     getNotes();
   }
+
   void getNotes() async {
     NotesSqlDB db = NotesSqlDB();
     await db.initialDB();
@@ -15,5 +17,38 @@ class NotesController {
     currentUserNotes = allUsersNotes.where((element) {
       return element.userId == usersController.currentUser.id;
     }).toList();
+  }
+
+  void addNote(Note note) async {
+    NotesSqlDB db = NotesSqlDB();
+    await db.initialDB();
+    Map<String, dynamic> noteMap = {
+      'id': note.id,
+      'title': note.title,
+      'body': note.body,
+      'userId': note.userId,
+    };
+    await db.insertData(noteMap);
+    getNotes();
+  }
+
+  void updateNote(Note note) async {
+    NotesSqlDB db = NotesSqlDB();
+    await db.initialDB();
+    Map<String, dynamic> noteMap = {
+      'id': note.id,
+      'title': note.title,
+      'body': note.body,
+      'userId': note.userId,
+    };
+    await db.updateData(noteMap);
+    getNotes();
+  }
+  
+  void deleteNote(Note note) async {
+    NotesSqlDB db = NotesSqlDB();
+    await db.initialDB();
+    await db.deleteData(note.id);
+    getNotes();
   }
 }

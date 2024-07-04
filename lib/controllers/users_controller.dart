@@ -1,6 +1,7 @@
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:notes/DB/users_db.dart';
 import 'package:notes/models/user.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class UsersController {
   User currentUser = User(id: '', email: '', name: '', password: '', bio: '');

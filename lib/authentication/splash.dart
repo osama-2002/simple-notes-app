@@ -38,6 +38,7 @@ class _SplashScreenState extends State<SplashScreen> {
     usersController = UsersController();
     notesController = NotesController();
     check();
+    notesController.getNotes();
   }
 
   @override

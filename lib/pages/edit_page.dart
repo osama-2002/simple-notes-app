@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:notes/models/note.dart';
-import 'package:notes/DB/notes_db.dart';
 import 'package:notes/shared.dart';
 
 var uuid = const Uuid();
@@ -62,31 +61,22 @@ class _EditPageState extends State<EditPage> {
               ]
             : [
                 IconButton(
-                  onPressed: () async {
+                  onPressed: () {
                     if (editMode) {
-                      NotesSqlDB db = NotesSqlDB();
-                      await db.initialDB();
-                      Map<String, dynamic> note = {
-                        'id': widget.note!.id,
-                        'title': titleController.text.toString(),
-                        'body': bodyController.text.toString(),
-                        'userId': usersController.currentUser.id,
-                      };
-                      await db.updateData(note).then((value) {
-                        Navigator.pop(context, note);
-                      });
+                      notesController.updateNote(Note(
+                          id: widget.note!.id,
+                          title: titleController.text.toString(),
+                          body: bodyController.text.toString(),
+                          userId: usersController.currentUser.id));
+                          setState((){});
+                      Navigator.pop(context);
                     } else {
-                      NotesSqlDB db = NotesSqlDB();
-                      await db.initialDB();
-                      Map<String, dynamic> note = {
-                        'title': titleController.text.toString(),
-                        'body': bodyController.text.toString(),
-                        'userId': usersController.currentUser.id,
-                        'id': uuid.v4()
-                      };
-                      await db.insertData(note).then((value) {
-                        Navigator.pop(context, note);
-                      });
+                      notesController.addNote(Note(
+                          title: titleController.text.toString(),
+                          body: bodyController.text.toString(),
+                          userId: usersController.currentUser.id));
+                          setState((){});
+                      Navigator.pop(context);
                     }
                   },
                   icon: const Icon(Icons.save),
