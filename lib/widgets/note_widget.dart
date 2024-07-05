@@ -1,9 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:notes/DB/notes_db.dart';
+
+import 'package:notes/models/note.dart';
 import 'package:notes/pages/edit_page.dart';
+import 'package:notes/pages/home_page.dart';
 import 'package:notes/shared.dart';
 
-Widget note(Map note, int index, context, setState) {
+class NoteWidget extends StatefulWidget {
+  const NoteWidget({super.key, required this.note, required this.index});
+  final Note note;
+  final int index;
+  @override
+  State<StatefulWidget> createState() {
+    return _NoteWidgetState();
+  }
+}
+
+class _NoteWidgetState extends State<NoteWidget> {
+  @override
+  Widget build(BuildContext context) {
     return InkWell(
       onLongPress: () {
         showDialog(
@@ -21,15 +35,10 @@ Widget note(Map note, int index, context, setState) {
                 ),
                 TextButton(
                   onPressed: () async {
-                    setState(() {
-                      notes.removeAt(index);
-                      allNotes.removeWhere((element) => element['id'] == note['id']);
-                    });
-                    NotesSqlDB db = NotesSqlDB();
-                    await db.initialDB();
-                    await db.deleteData(note['id']).then((value) {
-                      Navigator.pop(context);
-                    });
+                    await notesController.deleteNote(widget.note);
+
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const HomePage()));
                   },
                   child: const Text("Delete"),
                 ),
@@ -37,23 +46,13 @@ Widget note(Map note, int index, context, setState) {
             );
           },
         );
-      }
-      ,onTap: () {
+      },
+      onTap: () {
         Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (BuildContext context) => EditPage(note),
-            ),
-          ).then((newNote) {
-            if(newNote != null && newNote.toString().isNotEmpty) {
-              setState(() {
-                notes.removeAt(index);
-                notes.insert(index, newNote);
-                allNotes.removeWhere((element) => element['id'] == newNote['id']);
-                allNotes.insert(index, newNote);
-              });
-            }
-          }
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => EditPage(widget.note),
+          ),
         );
       },
       child: Container(
@@ -64,7 +63,7 @@ Widget note(Map note, int index, context, setState) {
         padding: const EdgeInsets.all(20),
         margin: const EdgeInsets.all(20),
         child: Text(
-          note["title"].toString(),
+          widget.note.title.toString(),
           style: const TextStyle(
             color: Colors.black,
             fontSize: 30,
@@ -73,3 +72,4 @@ Widget note(Map note, int index, context, setState) {
       ),
     );
   }
+}

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:notes/splash.dart';
+
+import 'package:notes/authentication/splash.dart';
 import 'package:notes/theme/colors.dart' as my_colors;
 
 void main() {
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         appBarTheme: const AppBarTheme(
           backgroundColor: my_colors.backGroundColor,
-          foregroundColor: Colors.white,
+          foregroundColor: my_colors.foreGroundColor,
           centerTitle: true,
         ),
         scaffoldBackgroundColor: my_colors.backGroundColor,
