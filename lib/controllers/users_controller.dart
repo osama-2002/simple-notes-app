@@ -64,9 +64,9 @@ class UsersController {
     for (int i = 0; i < users.length; ++i) {
       if (users[i].email == email && users[i].password == password) {
         currentUser = users[i];
-          saveUserId(users[i].id);
-          getUsers();
-          return true;
+        saveUserId(users[i].id);
+        getUsers();
+        return true;
       }
     }
     return false;

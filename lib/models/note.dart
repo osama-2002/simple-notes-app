@@ -7,7 +7,7 @@ class Note {
   final String title;
   final String body;
   final String userId;
-  
+
   Note({
     String? id,
     required this.title,

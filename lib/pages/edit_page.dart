@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
+import 'package:notes/pages/home_page.dart';
 import 'package:notes/models/note.dart';
 import 'package:notes/shared.dart';
 
@@ -61,22 +62,22 @@ class _EditPageState extends State<EditPage> {
               ]
             : [
                 IconButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (editMode) {
-                      notesController.updateNote(Note(
+                      await notesController.updateNote(Note(
                           id: widget.note!.id,
                           title: titleController.text.toString(),
                           body: bodyController.text.toString(),
                           userId: usersController.currentUser.id));
-                          setState((){});
-                      Navigator.pop(context);
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const HomePage()));
                     } else {
-                      notesController.addNote(Note(
+                      await notesController.addNote(Note(
                           title: titleController.text.toString(),
                           body: bodyController.text.toString(),
                           userId: usersController.currentUser.id));
-                          setState((){});
-                      Navigator.pop(context);
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const HomePage()));
                     }
                   },
                   icon: const Icon(Icons.save),

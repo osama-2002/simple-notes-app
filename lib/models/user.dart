@@ -16,7 +16,7 @@ class User {
     required this.password,
     required this.bio,
   }) : id = id ?? uuid.v4();
-  
+
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
       id: map['id'],

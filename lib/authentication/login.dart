@@ -82,8 +82,9 @@ class LoginPage extends StatelessWidget {
                     .validateLogin(
                         email: emailController.text.toString(),
                         password: passwordController.text.toString())
-                    .then((valid) {
+                    .then((valid) async {
                   if (valid) {
+                    await notesController.getNotes();
                     Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
                           builder: (context) => const HomePage(),

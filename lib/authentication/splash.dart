@@ -14,7 +14,6 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  
   void check() async {
     bool isLoggedIn = await usersController.loadUserData();
     if (isLoggedIn) {
@@ -48,5 +47,4 @@ class _SplashScreenState extends State<SplashScreen> {
       body: const Center(child: CircularProgressIndicator()),
     );
   }
-
 }

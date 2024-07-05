@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:notes/models/note.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
+import 'package:notes/models/note.dart';
 import 'package:notes/authentication/login.dart';
 import 'package:notes/pages/edit_page.dart';
 import 'package:notes/pages/profile_page.dart';
@@ -20,6 +20,16 @@ class _HomePageState extends State<HomePage> {
   List<Note> notesFound = [];
   bool searchMode = false;
   int tabIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    initialize();
+  }
+
+  void initialize() async {
+    await notesController.getNotes();
+  }
 
   @override
   Widget build(BuildContext context) {

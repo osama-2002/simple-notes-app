@@ -9,17 +9,21 @@ class NotesController {
     getNotes();
   }
 
-  void getNotes() async {
+  Future<void> getNotes() async {
     NotesSqlDB db = NotesSqlDB();
     await db.initialDB();
     List<Map<String, dynamic>> usersFromDb = await db.readData();
-    allUsersNotes = usersFromDb.map((noteMap) => Note.fromMap(noteMap),).toList();
+    allUsersNotes = usersFromDb
+        .map(
+          (noteMap) => Note.fromMap(noteMap),
+        )
+        .toList();
     currentUserNotes = allUsersNotes.where((element) {
       return element.userId == usersController.currentUser.id;
     }).toList();
   }
 
-  void addNote(Note note) async {
+  Future<void> addNote(Note note) async {
     NotesSqlDB db = NotesSqlDB();
     await db.initialDB();
     Map<String, dynamic> noteMap = {
@@ -29,10 +33,10 @@ class NotesController {
       'userId': note.userId,
     };
     await db.insertData(noteMap);
-    getNotes();
+    await getNotes();
   }
 
-  void updateNote(Note note) async {
+  Future<void> updateNote(Note note) async {
     NotesSqlDB db = NotesSqlDB();
     await db.initialDB();
     Map<String, dynamic> noteMap = {
@@ -42,13 +46,13 @@ class NotesController {
       'userId': note.userId,
     };
     await db.updateData(noteMap);
-    getNotes();
+    await getNotes();
   }
-  
-  void deleteNote(Note note) async {
+
+  Future<void> deleteNote(Note note) async {
     NotesSqlDB db = NotesSqlDB();
     await db.initialDB();
     await db.deleteData(note.id);
-    getNotes();
+    await getNotes();
   }
 }

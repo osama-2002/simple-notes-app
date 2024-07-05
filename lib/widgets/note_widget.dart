@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:notes/models/note.dart';
 import 'package:notes/pages/edit_page.dart';
+import 'package:notes/pages/home_page.dart';
 import 'package:notes/shared.dart';
 
 class NoteWidget extends StatefulWidget {
@@ -33,11 +34,11 @@ class _NoteWidgetState extends State<NoteWidget> {
                   child: const Text("Cancel"),
                 ),
                 TextButton(
-                  onPressed: () {
-                    setState(() {
-                      notesController.deleteNote(widget.note);
-                    });
-                    Navigator.pop(context);
+                  onPressed: () async {
+                    await notesController.deleteNote(widget.note);
+
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const HomePage()));
                   },
                   child: const Text("Delete"),
                 ),
