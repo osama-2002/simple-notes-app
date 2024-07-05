@@ -1,6 +1,7 @@
 # notes
 
-A new Flutter project.
+A simple offline notes app. It supports multiple accounts on the same device and allows notes to be made public for viewing from any account. 
+The app was created to practice MVC design pattern and to use essential Flutter packages like sqflite and shared_preferences.
 
 ## Getting Started
 
