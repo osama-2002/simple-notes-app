@@ -8,6 +8,7 @@ import 'package:notes/pages/edit_page.dart';
 import 'package:notes/pages/profile_page.dart';
 import 'package:notes/shared.dart';
 import 'package:notes/widgets/note_widget.dart';
+import 'package:notes/theme/my_theme.dart' as my_theme;
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -99,7 +100,19 @@ class _HomePageState extends State<HomePage> {
           ? loadPrivateTab()
           : tabIndex == 1
               ? loadPublicTab()
-              : const Placeholder(),
+              : const Padding(
+                  padding: EdgeInsets.all(30),
+                  child: Center(
+                    child: Text(
+                      '- A simple offline notes app.\n\n- It supports multiple accounts on the same device and allows notes to be made public for viewing from any account. \n\n- The app was created to practice MVC design pattern and to use essential Flutter packages like sqflite and shared_preferences.',
+                      style: TextStyle(
+                        color: my_theme.foreGroundColor,
+                        fontSize: 20,
+                      ),
+                      textAlign: TextAlign.justify,
+                    ),
+                  ),
+                ),
       floatingActionButton: !searchMode && tabIndex == 0
           ? IconButton(
               onPressed: () {
@@ -119,7 +132,7 @@ class _HomePageState extends State<HomePage> {
               icon: const Icon(
                 Icons.add,
                 size: 30,
-                color: Colors.white,
+                color: my_theme.foreGroundColor,
               ),
             )
           : Container(),
@@ -133,19 +146,19 @@ class _HomePageState extends State<HomePage> {
             icon: const Icon(Icons.home),
             title: const Text("Home"),
             selectedColor: Colors.blueAccent,
-            unselectedColor: Colors.white,
+            unselectedColor: my_theme.foreGroundColor,
           ),
           SalomonBottomBarItem(
             icon: const Icon(Icons.public),
             title: const Text("Public"),
-            selectedColor: Colors.pink,
-            unselectedColor: Colors.white,
+            selectedColor: Colors.blueAccent,
+            unselectedColor: my_theme.foreGroundColor,
           ),
           SalomonBottomBarItem(
-            icon: const Icon(Icons.account_circle_outlined),
-            title: const Text("Profile"),
-            selectedColor: Colors.teal,
-            unselectedColor: Colors.white,
+            icon: const Icon(Icons.info_outline),
+            title: const Text("About"),
+            selectedColor: Colors.blueAccent,
+            unselectedColor: my_theme.foreGroundColor,
           ),
         ],
       ),
@@ -154,39 +167,34 @@ class _HomePageState extends State<HomePage> {
 
   Widget loadPublicTab() {
     return !searchMode
-        ? ListView(
-            children: notesController.allUsersNotes.isEmpty
-                ? [
-                    const Center(
-                        child: Text(
-                      "No Public Notes found",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                      ),
-                    )),
-                  ]
-                : [
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (BuildContext context, int index) {
-                        return NoteWidget(
-                            note: notesController.allUsersNotes[index],
-                            index: index);
-                      },
-                      itemCount: notesController.allUsersNotes.length,
+        ? Container(
+            child: notesController.allUsersNotes.isEmpty
+                ? const Center(
+                    child: Text(
+                    "No Public Notes found",
+                    style: TextStyle(
+                      color: my_theme.foreGroundColor,
+                      fontSize: 20,
                     ),
-                  ],
+                  ))
+                : ListView.builder(
+                    itemBuilder: (BuildContext context, int index) {
+                      return NoteWidget(
+                          note: notesController.allUsersNotes[index],
+                          index: index);
+                    },
+                    itemCount: notesController.allUsersNotes.length,
+                  ),
           )
         : ListView(
             children: [
               TextField(
-                style: const TextStyle(color: Colors.white),
+                cursorColor: my_theme.foreGroundColor,
+                style: const TextStyle(color: my_theme.foreGroundColor),
                 decoration: const InputDecoration(
                   hintText: "Search",
                   hintStyle: TextStyle(
-                    color: Colors.white,
+                    color: my_theme.foreGroundColor,
                   ),
                 ),
                 onChanged: (text) {
@@ -227,7 +235,7 @@ class _HomePageState extends State<HomePage> {
                       child: Text(
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: Colors.white,
+                          color: my_theme.foreGroundColor,
                           fontSize: 17,
                         ),
                         "No Notes Found",
@@ -263,8 +271,8 @@ class _HomePageState extends State<HomePage> {
                               child: Text(
                                 "Create you first note!",
                                 style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.white,
+                                  fontSize: 24,
+                                  color: my_theme.foreGroundColor,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -290,11 +298,12 @@ class _HomePageState extends State<HomePage> {
         : ListView(
             children: [
               TextField(
-                style: const TextStyle(color: Colors.white),
+                cursorColor: my_theme.foreGroundColor,
+                style: const TextStyle(color: my_theme.foreGroundColor),
                 decoration: const InputDecoration(
                   hintText: "Search",
                   hintStyle: TextStyle(
-                    color: Colors.white,
+                    color: my_theme.foreGroundColor,
                   ),
                 ),
                 onChanged: (text) {
@@ -335,7 +344,7 @@ class _HomePageState extends State<HomePage> {
                       child: Text(
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: Colors.white,
+                          color: my_theme.foreGroundColor,
                           fontSize: 17,
                         ),
                         "No Notes Found",

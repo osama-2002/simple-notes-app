@@ -4,6 +4,7 @@ import 'package:notes/models/note.dart';
 import 'package:notes/pages/edit_page.dart';
 import 'package:notes/pages/home_page.dart';
 import 'package:notes/shared.dart';
+import 'package:notes/theme/my_theme.dart' as my_theme;
 
 class NoteWidget extends StatefulWidget {
   const NoteWidget({super.key, required this.note, required this.index});
@@ -65,7 +66,7 @@ class _NoteWidgetState extends State<NoteWidget> {
         child: Text(
           widget.note.title.toString(),
           style: const TextStyle(
-            color: Colors.black,
+            color: my_theme.foreGroundColor,
             fontSize: 30,
           ),
         ),

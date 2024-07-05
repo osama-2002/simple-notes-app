@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:notes/authentication/sign_up.dart';
 import 'package:notes/pages/home_page.dart';
 import 'package:notes/shared.dart';
+import 'package:notes/theme/my_theme.dart' as my_theme;
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
@@ -22,14 +23,15 @@ class LoginPage extends StatelessWidget {
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 10),
             child: TextField(
+              cursorColor: my_theme.foreGroundColor,
               style: const TextStyle(
-                color: Colors.white,
+                color: my_theme.foreGroundColor,
               ),
               controller: emailController,
               decoration: const InputDecoration(
                 hintText: "Email",
                 hintStyle: TextStyle(
-                  color: Colors.white,
+                  color: my_theme.foreGroundColor,
                 ),
               ),
             ),
@@ -40,14 +42,15 @@ class LoginPage extends StatelessWidget {
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 10),
             child: TextField(
+              cursorColor: my_theme.foreGroundColor,
               style: const TextStyle(
-                color: Colors.white,
+                color: my_theme.foreGroundColor,
               ),
               controller: passwordController,
               decoration: const InputDecoration(
                 hintText: "Password",
                 hintStyle: TextStyle(
-                  color: Colors.white,
+                  color: my_theme.foreGroundColor,
                 ),
               ),
               obscureText: true,
@@ -117,13 +120,13 @@ class LoginPage extends StatelessWidget {
               width: 80,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
+                color: const Color.fromARGB(255, 22, 82, 150),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: const Text(
                 'Enter',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: my_theme.foreGroundColor,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -139,7 +142,7 @@ class LoginPage extends StatelessWidget {
               const Text(
                 "Don't have an account? ",
                 style: TextStyle(
-                  color: Colors.white,
+                  color: my_theme.foreGroundColor,
                   fontSize: 16,
                 ),
               ),
@@ -156,7 +159,7 @@ class LoginPage extends StatelessWidget {
                   "sign up",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: my_theme.foreGroundColor,
                     fontSize: 16,
                   ),
                 ),

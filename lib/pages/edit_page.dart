@@ -4,6 +4,7 @@ import 'package:uuid/uuid.dart';
 import 'package:notes/pages/home_page.dart';
 import 'package:notes/models/note.dart';
 import 'package:notes/shared.dart';
+import 'package:notes/theme/my_theme.dart' as my_theme;
 
 var uuid = const Uuid();
 
@@ -110,6 +111,7 @@ class _EditPageState extends State<EditPage> {
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
+                          color: my_theme.foreGroundColor,
                         ),
                       ),
                     ),
@@ -126,34 +128,50 @@ class _EditPageState extends State<EditPage> {
                     widget.note!.body.toString(),
                     style: const TextStyle(
                       fontSize: 20,
+                      color: my_theme.foreGroundColor,
                     ),
                   ),
                 ),
               ]
             : [
-                TextField(
-                  style: const TextStyle(
-                    color: Colors.white,
-                  ),
-                  controller: titleController,
-                  maxLines: 2,
-                  decoration: const InputDecoration(
-                    hintText: "Enter Title",
-                    hintStyle: TextStyle(
-                      color: Colors.white,
+                const SizedBox(
+                  height: 220,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: TextField(
+                    cursorColor: my_theme.foreGroundColor,
+                    style: const TextStyle(
+                      color: my_theme.foreGroundColor,
+                    ),
+                    controller: titleController,
+                    maxLines: 2,
+                    decoration: const InputDecoration(
+                      filled: true,
+                      fillColor: Color.fromARGB(255, 255, 255, 255),
+                      hintText: "Enter Title",
+                      hintStyle: TextStyle(
+                        color: my_theme.foreGroundColor,
+                      ),
                     ),
                   ),
                 ),
-                TextField(
-                  style: const TextStyle(
-                    color: Colors.white,
-                  ),
-                  controller: bodyController,
-                  maxLines: 5,
-                  decoration: const InputDecoration(
-                    hintText: "Enter Body",
-                    hintStyle: TextStyle(
-                      color: Colors.white,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: TextField(
+                    cursorColor: my_theme.foreGroundColor,
+                    style: const TextStyle(
+                      color: my_theme.foreGroundColor,
+                    ),
+                    controller: bodyController,
+                    maxLines: 5,
+                    decoration: const InputDecoration(
+                      filled: true,
+                      fillColor: Color.fromARGB(255, 255, 255, 255),
+                      hintText: "Enter Body",
+                      hintStyle: TextStyle(
+                        color: my_theme.foreGroundColor,
+                      ),
                     ),
                   ),
                 ),
