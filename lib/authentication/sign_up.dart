@@ -25,6 +25,7 @@ class SignUpPage extends StatelessWidget {
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 10),
             child: TextField(
+              cursorColor: my_theme.foreGroundColor,
               style: const TextStyle(
                 color: my_theme.foreGroundColor,
               ),
@@ -43,6 +44,7 @@ class SignUpPage extends StatelessWidget {
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 10),
             child: TextField(
+              cursorColor: my_theme.foreGroundColor,
               style: const TextStyle(
                 color: my_theme.foreGroundColor,
               ),
@@ -61,6 +63,7 @@ class SignUpPage extends StatelessWidget {
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 10),
             child: TextField(
+              cursorColor: my_theme.foreGroundColor,
               style: const TextStyle(
                 color: my_theme.foreGroundColor,
               ),
@@ -117,7 +120,7 @@ class SignUpPage extends StatelessWidget {
               width: 90,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
+                color: Colors.blue,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: const Text(

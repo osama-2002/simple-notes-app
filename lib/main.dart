@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Notes',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueGrey),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 139, 179, 206)),
         useMaterial3: true,
         appBarTheme: const AppBarTheme(
           backgroundColor: my_theme.backGroundColor,

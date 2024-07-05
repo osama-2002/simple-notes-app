@@ -189,6 +189,7 @@ class _HomePageState extends State<HomePage> {
         : ListView(
             children: [
               TextField(
+                cursorColor: my_theme.foreGroundColor,
                 style: const TextStyle(color: my_theme.foreGroundColor),
                 decoration: const InputDecoration(
                   hintText: "Search",
@@ -297,6 +298,7 @@ class _HomePageState extends State<HomePage> {
         : ListView(
             children: [
               TextField(
+                cursorColor: my_theme.foreGroundColor,
                 style: const TextStyle(color: my_theme.foreGroundColor),
                 decoration: const InputDecoration(
                   hintText: "Search",

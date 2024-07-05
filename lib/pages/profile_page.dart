@@ -131,7 +131,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   width: 80,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor,
+                    color: const Color.fromARGB(255, 22, 82, 150),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Text(

@@ -23,6 +23,7 @@ class LoginPage extends StatelessWidget {
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 10),
             child: TextField(
+              cursorColor: my_theme.foreGroundColor,
               style: const TextStyle(
                 color: my_theme.foreGroundColor,
               ),
@@ -41,6 +42,7 @@ class LoginPage extends StatelessWidget {
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 10),
             child: TextField(
+              cursorColor: my_theme.foreGroundColor,
               style: const TextStyle(
                 color: my_theme.foreGroundColor,
               ),
@@ -118,7 +120,7 @@ class LoginPage extends StatelessWidget {
               width: 80,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
+                color: const Color.fromARGB(255, 22, 82, 150),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: const Text(
