@@ -4,6 +4,7 @@ import 'package:uuid/uuid.dart';
 import 'package:notes/pages/home_page.dart';
 import 'package:notes/models/note.dart';
 import 'package:notes/shared.dart';
+import 'package:notes/theme/my_theme.dart' as my_theme;
 
 var uuid = const Uuid();
 
@@ -133,27 +134,27 @@ class _EditPageState extends State<EditPage> {
             : [
                 TextField(
                   style: const TextStyle(
-                    color: Colors.white,
+                    color: my_theme.foreGroundColor,
                   ),
                   controller: titleController,
                   maxLines: 2,
                   decoration: const InputDecoration(
                     hintText: "Enter Title",
                     hintStyle: TextStyle(
-                      color: Colors.white,
+                      color: my_theme.foreGroundColor,
                     ),
                   ),
                 ),
                 TextField(
                   style: const TextStyle(
-                    color: Colors.white,
+                    color: my_theme.foreGroundColor,
                   ),
                   controller: bodyController,
                   maxLines: 5,
                   decoration: const InputDecoration(
                     hintText: "Enter Body",
                     hintStyle: TextStyle(
-                      color: Colors.white,
+                      color: my_theme.foreGroundColor,
                     ),
                   ),
                 ),

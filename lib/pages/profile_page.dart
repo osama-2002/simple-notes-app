@@ -3,6 +3,7 @@ import 'package:notes/models/user.dart';
 
 import 'package:notes/pages/home_page.dart';
 import 'package:notes/shared.dart';
+import 'package:notes/theme/my_theme.dart' as my_theme;
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -50,12 +51,12 @@ class _ProfilePageState extends State<ProfilePage> {
                     return "email can't be empty";
                   }
                 },
-                style: const TextStyle(color: Colors.white),
+                style: const TextStyle(color: my_theme.foreGroundColor),
                 controller: emailController,
                 decoration: const InputDecoration(
                   hintText: "Edit Email",
                   hintStyle: TextStyle(
-                    color: Colors.white,
+                    color: my_theme.foreGroundColor,
                   ),
                 ),
               ),
@@ -68,12 +69,12 @@ class _ProfilePageState extends State<ProfilePage> {
                     return "name can't be empty";
                   }
                 },
-                style: const TextStyle(color: Colors.white),
+                style: const TextStyle(color: my_theme.foreGroundColor),
                 controller: nameController,
                 decoration: const InputDecoration(
                   hintText: "Edit Name",
                   hintStyle: TextStyle(
-                    color: Colors.white,
+                    color: my_theme.foreGroundColor,
                   ),
                 ),
               ),
@@ -86,12 +87,12 @@ class _ProfilePageState extends State<ProfilePage> {
                     return "bio can't be empty";
                   }
                 },
-                style: const TextStyle(color: Colors.white),
+                style: const TextStyle(color: my_theme.foreGroundColor),
                 controller: bioController,
                 decoration: const InputDecoration(
                   hintText: "Add Your Bio",
                   hintStyle: TextStyle(
-                    color: Colors.white,
+                    color: my_theme.foreGroundColor,
                   ),
                 ),
               ),
@@ -136,7 +137,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: const Text(
                     'Save',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: my_theme.foreGroundColor,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),

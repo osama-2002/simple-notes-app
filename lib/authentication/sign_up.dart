@@ -4,6 +4,7 @@ import 'package:notes/authentication/login.dart';
 import 'package:notes/models/user.dart';
 import 'package:notes/pages/home_page.dart';
 import 'package:notes/shared.dart';
+import 'package:notes/theme/my_theme.dart' as my_theme;
 
 class SignUpPage extends StatelessWidget {
   SignUpPage({super.key});
@@ -25,13 +26,13 @@ class SignUpPage extends StatelessWidget {
             margin: const EdgeInsets.symmetric(horizontal: 10),
             child: TextField(
               style: const TextStyle(
-                color: Colors.white,
+                color: my_theme.foreGroundColor,
               ),
               controller: emailController,
               decoration: const InputDecoration(
                 hintText: "Email",
                 hintStyle: TextStyle(
-                  color: Colors.white,
+                  color: my_theme.foreGroundColor,
                 ),
               ),
             ),
@@ -43,13 +44,13 @@ class SignUpPage extends StatelessWidget {
             margin: const EdgeInsets.symmetric(horizontal: 10),
             child: TextField(
               style: const TextStyle(
-                color: Colors.white,
+                color: my_theme.foreGroundColor,
               ),
               controller: nameController,
               decoration: const InputDecoration(
                 hintText: "Name",
                 hintStyle: TextStyle(
-                  color: Colors.white,
+                  color: my_theme.foreGroundColor,
                 ),
               ),
             ),
@@ -61,13 +62,13 @@ class SignUpPage extends StatelessWidget {
             margin: const EdgeInsets.symmetric(horizontal: 10),
             child: TextField(
               style: const TextStyle(
-                color: Colors.white,
+                color: my_theme.foreGroundColor,
               ),
               controller: passwordController,
               decoration: const InputDecoration(
                 hintText: "Password",
                 hintStyle: TextStyle(
-                  color: Colors.white,
+                  color: my_theme.foreGroundColor,
                 ),
               ),
               obscureText: true,
@@ -122,7 +123,7 @@ class SignUpPage extends StatelessWidget {
               child: const Text(
                 'Submit',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: my_theme.foreGroundColor,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -138,7 +139,7 @@ class SignUpPage extends StatelessWidget {
               const Text(
                 "Already have an account? ",
                 style: TextStyle(
-                  color: Colors.white,
+                  color: my_theme.foreGroundColor,
                   fontSize: 16,
                 ),
               ),
@@ -155,7 +156,7 @@ class SignUpPage extends StatelessWidget {
                   "login",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: my_theme.foreGroundColor,
                     fontSize: 16,
                   ),
                 ),
