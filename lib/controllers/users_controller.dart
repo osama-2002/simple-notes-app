@@ -11,7 +11,7 @@ class UsersController {
     getUsers();
   }
 
-  void getUsers() async {
+  Future<void> getUsers() async {
     UsersSqlDB db = UsersSqlDB();
     await db.initialDB();
     List<Map<String, dynamic>> usersFromDb = await db.readData();
@@ -22,12 +22,19 @@ class UsersController {
         .toList();
   }
 
-  void updateUserData(Map<String, dynamic> updatedUserData) async {
+  Future<void> updateUserData(User user) async {
     UsersSqlDB db = UsersSqlDB();
     await db.initialDB();
-    await db.updateData(updatedUserData);
-    currentUser = User.fromMap(updatedUserData);
-    getUsers();
+    Map<String, dynamic> userMap = {
+      'id': user.id,
+      'email': user.email,
+      'name': user.name,
+      'password': user.password,
+      'bio': user.bio,
+    };
+    await db.updateData(userMap);
+    await getUsers();
+    currentUser = user;
   }
 
   void registerUser(User user) async {
@@ -42,7 +49,7 @@ class UsersController {
     });
     currentUser = user;
     saveUserId(user.id);
-    getUsers();
+    await getUsers();
   }
 
   Future<bool> loadUserData() async {
@@ -52,7 +59,7 @@ class UsersController {
         if (id == users[i].id) {
           currentUser = users[i];
           saveUserId(users[i].id);
-          getUsers();
+          await getUsers();
           return true;
         }
       }

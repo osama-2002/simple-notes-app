@@ -14,30 +14,31 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  void check() async {
+
+  void initializeControllers() async {
+    usersController = UsersController();
+    await usersController.getUsers();
     bool isLoggedIn = await usersController.loadUserData();
+    notesController = NotesController();
+    await notesController.getNotes();
+
     if (isLoggedIn) {
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (context) => const HomePage(),
-          ),
-          (Route<dynamic> route) => false);
+        MaterialPageRoute(builder: (context) => const HomePage()),
+        (Route<dynamic> route) => false,
+      );
     } else {
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (context) => SignUpPage(),
-          ),
-          (Route<dynamic> route) => false);
+        MaterialPageRoute(builder: (context) => SignUpPage()),
+        (Route<dynamic> route) => false,
+      );
     }
   }
-
+  
   @override
   void initState() {
     super.initState();
-    usersController = UsersController();
-    notesController = NotesController();
-    check();
-    notesController.getNotes();
+    initializeControllers();
   }
 
   @override

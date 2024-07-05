@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notes/models/user.dart';
 
 import 'package:notes/pages/home_page.dart';
 import 'package:notes/shared.dart';
@@ -14,6 +15,14 @@ class _ProfilePageState extends State<ProfilePage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController bioController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    nameController.dispose();
+    bioController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +44,10 @@ class _ProfilePageState extends State<ProfilePage> {
               const SizedBox(height: 20),
               TextFormField(
                 validator: (value) {
-                  if (value.toString().contains("@")) {
+                  if (value != '') {
                     return null;
                   } else {
-                    return "email must contain @.";
+                    return "email can't be empty";
                   }
                 },
                 style: const TextStyle(color: Colors.white),
@@ -53,10 +62,10 @@ class _ProfilePageState extends State<ProfilePage> {
               const SizedBox(height: 20),
               TextFormField(
                 validator: (value) {
-                  if (value.toString().length > 3) {
+                  if (value != '') {
                     return null;
                   } else {
-                    return "name must be more than 3 characters.";
+                    return "name can't be empty";
                   }
                 },
                 style: const TextStyle(color: Colors.white),
@@ -71,10 +80,10 @@ class _ProfilePageState extends State<ProfilePage> {
               const SizedBox(height: 16.0),
               TextFormField(
                 validator: (value) {
-                  if (value.toString().length > 3) {
+                  if (value != '') {
                     return null;
                   } else {
-                    return "bio must be more than 3 characters.";
+                    return "bio can't be empty";
                   }
                 },
                 style: const TextStyle(color: Colors.white),
@@ -90,14 +99,14 @@ class _ProfilePageState extends State<ProfilePage> {
               InkWell(
                 onTap: () async {
                   if (formKey.currentState!.validate()) {
-                    Map<String, dynamic> updatedUserData = {
-                      'id': usersController.currentUser.id,
-                      'name': nameController.text,
-                      'email': emailController.text,
-                      'password': usersController.currentUser.id,
-                      'bio': bioController.text,
-                    };
-                    usersController.updateUserData(updatedUserData);
+                    await usersController.updateUserData(
+                      User(
+                          id: usersController.currentUser.id,
+                          email: emailController.text,
+                          name: nameController.text,
+                          password: usersController.currentUser.password,
+                          bio: bioController.text),
+                    );
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('Profile updated successfully!'),

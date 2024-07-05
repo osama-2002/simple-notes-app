@@ -21,6 +21,13 @@ class _EditPageState extends State<EditPage> {
   TextEditingController bodyController = TextEditingController();
 
   @override
+  void dispose() {
+    titleController.dispose();
+    bodyController.dispose();
+    super.dispose();
+  }
+
+  @override
   void initState() {
     super.initState();
     if (widget.note != null) {
